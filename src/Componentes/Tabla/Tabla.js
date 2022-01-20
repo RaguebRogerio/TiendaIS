@@ -46,7 +46,7 @@ export default function Tabla(props) {
               <StyledTableCell align="center">{row.descripcion}</StyledTableCell>
               <StyledTableCell align="center">{row.precio}</StyledTableCell>
               <StyledTableCell align="center" onClick={()=>history.push(rootPath + '/editarproducto')}>{row.editar}</StyledTableCell>
-              <StyledTableCell align="center" onClick={()=>console.log("hola")}>{row.eliminar}</StyledTableCell>
+              <StyledTableCell align="center" onClick={props.actionEliminar}>{row.eliminar}</StyledTableCell>
             </StyledTableRow>
           ))}
         </TableBody>
