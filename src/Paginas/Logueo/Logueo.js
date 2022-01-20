@@ -5,7 +5,7 @@ import backgroundImage from './../../imagenes/imagen-fondo-tienda.jpg'
 import { useHistory } from 'react-router-dom/cjs/react-router-dom.min';
 import  Box  from '@mui/material/Box';
 import './Logueo.css'
-
+import { rootPath } from '../../App';
 const Logueo = ()=>{
     const [usuario, setUsuario] = useState("")
     const [pass, setPassword] = useState("")
@@ -14,7 +14,7 @@ const Logueo = ()=>{
     const ingresar = ()=>{
         console.log(usuario, pass)
         //Llamar a la api
-        history.push("/lolo");
+        history.push(rootPath+"/inicio");
     }
     const setBackgroundImage = (url)=>{
         document.body.style.backgroundImage = url;
