@@ -19,8 +19,16 @@ import InboxIcon from "@mui/icons-material/MoveToInbox";
 import MailIcon from "@mui/icons-material/Mail";
 import { useHistory } from 'react-router-dom/cjs/react-router-dom.min';
 import { rootPath } from "../App";
-import { Link } from "@mui/material";
-
+//Productos
+import CheckroomIcon from '@mui/icons-material/Checkroom';
+//agregar caracteristica
+import AddBoxIcon from '@mui/icons-material/AddBox';
+//Inventario
+import Inventory2SharpIcon from '@mui/icons-material/Inventory2Sharp';
+// Realizar Venta
+import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart';
+//Salir
+import LogoutIcon from '@mui/icons-material/Logout';
 const drawerWidth = 240;
 
 const AppBar = styled(MuiAppBar, {
@@ -82,10 +90,13 @@ export default function NavBar() {
         direccion: rootPath + "/venta",
 
     },
+    {
+      name:"Salir",
+      direccion: "/",
+
+  },
   ]
-  const redireccionar=(direccion)=>{
-      history.push(direccion)
-  }
+
   return (
     <Box sx={{ display: "flex" }}>
       <CssBaseline />
@@ -100,9 +111,7 @@ export default function NavBar() {
           >
             <MenuIcon />
           </IconButton>
-          <Typography variant="h6" noWrap component="div">
-            Menú
-          </Typography>
+
         </Toolbar>
       </AppBar>
       <Drawer
@@ -119,9 +128,13 @@ export default function NavBar() {
         open={open}
       >
         <DrawerHeader>
+          <Typography variant="h5" noWrap component="div">
+            Menú
+          </Typography>
           <IconButton onClick={cerrarMenu}>
             {theme.direction === "ltr" ? (
               <ChevronLeftIcon />
+              
             ) : (
               <ChevronRightIcon />
             )}
@@ -132,9 +145,11 @@ export default function NavBar() {
           {rutas.map((route, index) => (
           
                 <ListItem button key={index} >
-{/*                   <ListItemIcon onClick={console.log("hola")}>
-                    {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
-                </ListItemIcon> */}
+                <ListItemIcon>
+                    {route.name === "Productos" ? <CheckroomIcon color="primary"/> : route.name === "Stock" ? <Inventory2SharpIcon color="primary"/> :
+                    route.name === "Agregar caracteristica" ? <AddBoxIcon color="primary"/>: route.name === "Realizar Venta" ? <AddShoppingCartIcon color="primary"/>
+                    : <LogoutIcon color="primary"/>}
+                </ListItemIcon>
                 <ListItemText primary={route.name} onClick={()=>history.push(route.direccion)}/>
                 </ListItem>
             
