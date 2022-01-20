@@ -7,6 +7,8 @@ import AgregarCaracteristica from './Paginas/AgregarCaracteristica/AgregarCaract
 import Productos from './Paginas/Productos/Productos';
 import RealizarVenta from './Paginas/RealizarVenta/RealizarVenta';
 import AgregarStock from './Paginas/AgregarStock/AgregarStock';
+import AltaProducto from './Paginas/Productos/AltaProducto'
+import ModificarProducto from './Paginas/Productos/ModificacionProducto'
 export const rootPath = "/tiendaOnline";
 
 function App() {
@@ -14,6 +16,8 @@ function App() {
   return (
     <div>
       <Switch>
+            <Route exact path ={rootPath + "/editarproducto"} component={ ModificarProducto}/>
+            <Route exact path ={rootPath + "/nuevoproducto"} component={ AltaProducto}/>
             <Route exact path ={rootPath + "/agregarstock"} component={ AgregarStock}/>
             <Route exact path ={rootPath + "/venta"} component={ RealizarVenta}/>      
             <Route exact path ={rootPath + "/producto"} component={ Productos}/>
