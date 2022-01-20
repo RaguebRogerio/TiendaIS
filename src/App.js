@@ -6,7 +6,7 @@ import {Route, Switch} from 'react-router-dom'
 import AgregarCaracteristica from './Paginas/AgregarCaracteristica/AgregarCaracteristica';
 import Productos from './Paginas/Productos/Productos';
 import RealizarVenta from './Paginas/RealizarVenta/RealizarVenta';
-import ControlStock from './Paginas/ControlStock/ControlStock.Js';
+import AgregarStock from './Paginas/AgregarStock/AgregarStock';
 export const rootPath = "/tiendaOnline";
 
 function App() {
@@ -14,7 +14,7 @@ function App() {
   return (
     <div>
       <Switch>
-            <Route exact path ={rootPath + "/controlstock"} component={ControlStock}/>
+            <Route exact path ={rootPath + "/agregarstock"} component={ AgregarStock}/>
             <Route exact path ={rootPath + "/venta"} component={ RealizarVenta}/>      
             <Route exact path ={rootPath + "/producto"} component={ Productos}/>
             <Route exact path ={rootPath + "/agregarcaracteristica"} component={ AgregarCaracteristica}/>

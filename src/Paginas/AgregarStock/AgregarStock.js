@@ -1,12 +1,13 @@
 import NavBar from "../../Componentes/NavBar"
 
 
-const AgregarCaracteristica = ()=>{
+const AgregarStock = ()=>{
     return(
         <div>
             <NavBar></NavBar>
-            agregarCaracteristica
+            <br/>
+            agregarStock
         </div>
     )
 }
-export default AgregarCaracteristica
+export default AgregarStock

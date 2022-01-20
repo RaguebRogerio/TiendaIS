@@ -19,6 +19,7 @@ import InboxIcon from "@mui/icons-material/MoveToInbox";
 import MailIcon from "@mui/icons-material/Mail";
 import { useHistory } from 'react-router-dom/cjs/react-router-dom.min';
 import { rootPath } from "../App";
+import { Link } from "@mui/material";
 
 const drawerWidth = 240;
 
@@ -52,11 +53,11 @@ export default function NavBar() {
   const theme = useTheme();
   const [open, setOpen] = React.useState(false);
 
-  const handleDrawerOpen = () => {
+  const abrirMenu = () => {
     setOpen(true);
   };
 
-  const handleDrawerClose = () => {
+  const cerrarMenu = () => {
     setOpen(false);
   };
   let history =useHistory()
@@ -68,7 +69,7 @@ export default function NavBar() {
       },
       {
         name:"Stock",
-        direccion: rootPath + "/controlstock",
+        direccion: rootPath + "/agregarstock",
 
     },
     {
@@ -82,6 +83,9 @@ export default function NavBar() {
 
     },
   ]
+  const redireccionar=(direccion)=>{
+      history.push(direccion)
+  }
   return (
     <Box sx={{ display: "flex" }}>
       <CssBaseline />
@@ -90,7 +94,7 @@ export default function NavBar() {
           <IconButton
             color="inherit"
             aria-label="open drawer"
-            onClick={handleDrawerOpen}
+            onClick={abrirMenu}
             edge="start"
             sx={{ mr: 2, ...(open && { display: "none" }) }}
           >
@@ -115,7 +119,7 @@ export default function NavBar() {
         open={open}
       >
         <DrawerHeader>
-          <IconButton onClick={handleDrawerClose}>
+          <IconButton onClick={cerrarMenu}>
             {theme.direction === "ltr" ? (
               <ChevronLeftIcon />
             ) : (
@@ -126,12 +130,14 @@ export default function NavBar() {
         <Divider />
         <List>
           {rutas.map((route, index) => (
-            <ListItem button key={index} >
-{/*               <ListItemIcon >
-                {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
-              </ListItemIcon> */}
-              <ListItemText primary={route.name} onClick={console.log(route.direccion)}/>
-            </ListItem>
+          
+                <ListItem button key={index} >
+{/*                   <ListItemIcon onClick={console.log("hola")}>
+                    {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
+                </ListItemIcon> */}
+                <ListItemText primary={route.name} onClick={()=>history.push(route.direccion)}/>
+                </ListItem>
+            
           ))}
         </List>
       </Drawer>
