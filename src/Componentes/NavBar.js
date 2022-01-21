@@ -70,23 +70,21 @@ export default function NavBar() {
   let history =useHistory()
   const rutas = [
       {
+          name:"Agregar caracteristica",
+          direccion: rootPath + "/agregarcaracteristica",
+      },
+      {
           name:"Productos",
           direccion: rootPath + "/producto",
 
       },
       {
-        name:"Stock",
-        direccion: rootPath + "/agregarstock",
-
-    },
-    {
-        name:"Agregar caracteristica",
-        direccion: rootPath + "/agregarcaracteristica",
-
-    },
-    {
         name:"Realizar Venta",
         direccion: rootPath + "/venta",
+      },
+      {
+        name:"Stock",
+        direccion: rootPath + "/agregarstock",
 
     },
     {

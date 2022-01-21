@@ -6,8 +6,10 @@ import DropDown from "../../Componentes/Select/Select";
 import Button from '@mui/material/Button';
 import Modal from "../../Componentes/Modal/Modal"
 import { useEffect, useState } from "react";
-
+import { useHistory } from "react-router-dom/cjs/react-router-dom.min";
+import { rootPath } from "../../App";
 const AltaProducto  = ()=>{
+    let history = useHistory()
     //Input
     const [codigoProducto, setCodigoProducto] = useState("1341345")
     const [netoGravado, setNetoGravado] = useState(123123)
@@ -144,6 +146,7 @@ const AltaProducto  = ()=>{
             setOpen={setAbrirModal}
             >
                 <h1>Crear producto</h1>
+                <Button variant="contained" onClick={()=>{history.push(rootPath +'/producto')}}>Confirmar</Button>
             </Modal>
         </Container>
     )
