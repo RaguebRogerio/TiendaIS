@@ -17,6 +17,7 @@ import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
 import { useHistory } from 'react-router-dom/cjs/react-router-dom.min';
 import { rootPath } from "../App";
+
 //Productos
 import CheckroomIcon from '@mui/icons-material/Checkroom';
 //agregar caracteristica
@@ -109,7 +110,6 @@ export default function NavBar() {
           >
             <MenuIcon />
           </IconButton>
-
         </Toolbar>
       </AppBar>
       <Drawer
@@ -127,7 +127,7 @@ export default function NavBar() {
       >
         <DrawerHeader>
           <Typography variant="h5" noWrap component="div">
-            Menú
+           Menú
           </Typography>
           <IconButton onClick={cerrarMenu}>
             {theme.direction === "ltr" ? (
