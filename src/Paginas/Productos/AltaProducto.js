@@ -4,7 +4,7 @@ import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
 import DropDown from "../../Componentes/Select/Select";
 import Button from '@mui/material/Button';
-
+import Modal from "../../Componentes/Modal/Modal"
 import { useEffect, useState } from "react";
 
 const AltaProducto  = ()=>{
@@ -57,10 +57,13 @@ const AltaProducto  = ()=>{
         '15%',
         '21%'
     ]
-
+    //Modal
+    const [abrirModal, setAbrirModal] = useState(false);
+    const handleOpen = () => setAbrirModal(true);
     //Funcion de crear producto
     const crearProducto = ()=>{
-        console.log("CrearProducto")
+        console.log("Crear Producto")
+        handleOpen()
     }
     return(
         <Container>
@@ -136,7 +139,12 @@ const AltaProducto  = ()=>{
                     <Button fullWidth variant="contained" onClick={()=>{crearProducto()}}>Crear producto</Button>
                 </div>
             </Box>
-
+            <Modal
+            open={abrirModal}
+            setOpen={setAbrirModal}
+            >
+                <h1>Crear producto</h1>
+            </Modal>
         </Container>
     )
 }
