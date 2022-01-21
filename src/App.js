@@ -16,7 +16,7 @@ function App() {
   return (
     <div>
       <Switch>
-            <Route exact path ={rootPath + "/editarproducto"} component={ ModificarProducto}/>
+            <Route path ={rootPath + "/editarproducto"} component={ ModificarProducto}/>
             <Route exact path ={rootPath + "/nuevoproducto"} component={ AltaProducto}/>
             <Route exact path ={rootPath + "/agregarstock"} component={ AgregarStock}/>
             <Route exact path ={rootPath + "/venta"} component={ RealizarVenta}/>      

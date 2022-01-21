@@ -26,9 +26,9 @@ const RealizarVenta = ()=>{
     ]
     //Tabla
     const headers =[
-        {text:"Descripcion"},
-        {text:"Precio"},
-        {text:"Cantidad"},
+        {text:"Descripcion", key:"descripcion"},
+        {text:"Precio", key:"precio"},
+        {text:"Cantidad", key:"cantidad"},
     ]
     const rows = [
         {descripcion: 'Remera Puma1', precio:'$ 200', cantidad: 1},

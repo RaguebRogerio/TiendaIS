@@ -43,10 +43,12 @@ export default function Tabla(props) {
         <TableBody>
           {props.rows.map((row) => (
             <StyledTableRow key={row.descripcion}>
-              <StyledTableCell align="center">{row.descripcion}</StyledTableCell>
-              <StyledTableCell align="center">{row.precio}</StyledTableCell>
+              {props.headers.map((header)=>(
+                  <StyledTableCell align="center" onClick={()=>header.click(row[props.idColumn])}>{row[header.key]}</StyledTableCell>
+              ))}
+{/*           <StyledTableCell align="center">{row.precio}</StyledTableCell>
               <StyledTableCell align="center" onClick={()=>history.push(rootPath + '/editarproducto')}>{row.editar}</StyledTableCell>
-              <StyledTableCell align="center" onClick={props.actionEliminar}>{row.eliminar}</StyledTableCell>
+              <StyledTableCell align="center" onClick={props.actionEliminar}>{row.eliminar}</StyledTableCell> */}
             </StyledTableRow>
           ))}
         </TableBody>

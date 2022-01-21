@@ -11,11 +11,14 @@ import { useHistory } from "react-router-dom/cjs/react-router-dom.min";
 import { useState } from "react";
 import Modal from "../../Componentes/Modal/Modal"
 const Productos = ()=>{
+    //MODAL
+    const [abrirModal, setAbrirModal] = useState(false);
+    const handleOpen = () => setAbrirModal(true);
     const headers =[
-        {text:"Descripcion"},
-        {text:"Precio"},
-        {text:"Editar"},
-        {text:"Eliminar"},
+        {text:"Descripcion", key:"descripcion"},
+        {text:"Precio", key:"precio"},
+        {text:"Editar", key:"editar" , click:(cod)=> {history.push(rootPath + '/editarproducto/'  + cod )}},
+        {text:"Eliminar",key:"eliminar", click:()=>setAbrirModal(true)},
     ]
     const rows = [
         {descripcion: 'Remera Puma1', precio:'$ 200', editar: <EditIcon color="primary"/>, eliminar: <DeleteForeverIcon color="primary"/>},
@@ -26,16 +29,14 @@ const Productos = ()=>{
       ];
 
     let history = useHistory();
-    //MODAL
-    const [abrirModal, setAbrirModal] = useState(false);
-    const handleOpen = () => setAbrirModal(true);
+
     return(
         <Container>
             <div>
                 <NavBar></NavBar>
                 <h1 style={{margin: "0px"}}>Productos</h1>
                 <Button variant="contained" onClick={()=>  history.push(rootPath+'/nuevoproducto') } style = {{margin:"0px"}} size="large">Nuevo producto</Button>
-                <Tabla rows={rows} headers={headers} actionEliminar={handleOpen}></Tabla>
+                <Tabla rows={rows} headers={headers} idColumn='descripcion' actionEliminar={handleOpen}></Tabla>
             </div>
 
             <Modal
