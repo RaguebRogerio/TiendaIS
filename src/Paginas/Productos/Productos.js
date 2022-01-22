@@ -36,7 +36,9 @@ const Productos = ()=>{
                 <NavBar></NavBar>
                 <h1 style={{margin: "0px"}}>Productos</h1>
                 <Button variant="contained" onClick={()=>  history.push(rootPath+'/nuevoproducto') } style = {{margin:"0px"}} size="large">Nuevo producto</Button>
-                <Tabla rows={rows} headers={headers} idColumn='descripcion' actionEliminar={handleOpen}></Tabla>
+                <div style={{marginTop:"20px"}}>
+                    <Tabla rows={rows} headers={headers} idColumn='descripcion' actionEliminar={handleOpen}></Tabla>
+                </div>
             </div>
 
             <Modal

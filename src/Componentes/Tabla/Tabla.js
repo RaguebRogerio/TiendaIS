@@ -7,8 +7,6 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
-import { useHistory } from 'react-router-dom/cjs/react-router-dom.min';
-import { rootPath } from '../../App';
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
     backgroundColor: "#1976d2",
@@ -29,9 +27,8 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
   },
 }));
 export default function Tabla(props) {
-    let history = useHistory();
   return (
-    <TableContainer component={Paper} style={{marginTop:"20px"}}>
+    <TableContainer component={Paper}>
       <Table sx={{ minWidth: 400 }} aria-label="customized table">
         <TableHead>
           <TableRow>

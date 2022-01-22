@@ -62,7 +62,7 @@ const MenuProps = {
 export default function DropDown(props) {
   return (
     <div>
-      <FormControl sx={{ m: 1, width: props.width }}>
+      <FormControl sx={{ width: props.width }}>
         <InputLabel id="demo-multiple-name-label">{props.label}</InputLabel>
         <Select
           labelId="demo-multiple-name-label"

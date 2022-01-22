@@ -6,7 +6,10 @@ import Box from '@mui/material/Box';
 import DropDown from "../../Componentes/Select/Select";
 import Tabla from "../../Componentes/Tabla/Tabla"
 import { useState } from "react";
-
+import Modal from "../../Componentes/Modal/Modal"
+import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
+import Typography from "@mui/material/Typography";
+import EditIcon from '@mui/icons-material/Edit';
 const RealizarVenta = ()=>{
     //Producto
     const [codigoProducto, setCodigoProducto] = useState()
@@ -16,7 +19,24 @@ const RealizarVenta = ()=>{
     const [talle, setTalle] = useState()
     const [color, setColor] = useState()
     const [cantidad, setCantidad] = useState()
-
+    //Modales
+    const [abrirModalEliminar, setAbrirModalEliminar] = useState(false);
+    const [abrirModalPagar, setAbrirModalPagar] = useState()
+    const [abrirModalBuscarCliente, setAbrirModalBuscarCliente] = useState()
+    //Modal de buscar
+    const [inputBuscar, setInputBuscar] =useState()
+    //ModalPagar
+    const [metodoDePago, setMetodoDePago] = useState()
+    const [monto, setMonto] = useState()
+    const metodosDePago =[
+        'Efectivo',
+        'Tarjeta'
+    ]
+    //CLiente
+    const [cliente, setCliente] = useState("CONSUMIDOR FINAL")
+    const [condicionTributaria, setCondicionTributaria] = useState("CONSUMIDOR FINAL")
+    //SubTotal
+    const [subtotal, setSubTotal] = useState(0)
     //Colores
     const colores = [
         'rojo',
@@ -29,13 +49,14 @@ const RealizarVenta = ()=>{
         {text:"Descripcion", key:"descripcion"},
         {text:"Precio", key:"precio"},
         {text:"Cantidad", key:"cantidad"},
+        {text:"Eliminar",key:"eliminar", click:()=>setAbrirModalEliminar(true)},
     ]
     const rows = [
-        {descripcion: 'Remera Puma1', precio:'$ 200', cantidad: 1},
-        {descripcion: 'Remera Puma2', precio:'$ 200', cantidad: 2},
-        {descripcion: 'Remera Puma3', precio:'$ 200', cantidad: 3},
-        {descripcion: 'Remera Puma4', precio:'$ 200', cantidad: 4},
-        {descripcion: 'Remera Puma5', precio:'$ 200', cantidad: 5}
+        {descripcion: 'Remera Puma1', precio:'$ 200', cantidad: 1,eliminar: <DeleteForeverIcon color="primary"/>},
+        {descripcion: 'Remera Puma2', precio:'$ 200', cantidad: 2,eliminar: <DeleteForeverIcon color="primary"/>},
+        {descripcion: 'Remera Puma3', precio:'$ 200', cantidad: 3,eliminar: <DeleteForeverIcon color="primary"/>},
+        {descripcion: 'Remera Puma4', precio:'$ 200', cantidad: 4,eliminar: <DeleteForeverIcon color="primary"/>},
+        {descripcion: 'Remera Puma5', precio:'$ 200', cantidad: 5,eliminar: <DeleteForeverIcon color="primary"/>}
       ];
     return(
         <Container>
@@ -80,11 +101,88 @@ const RealizarVenta = ()=>{
                     autoComplete="off"
                     >
                         <Tabla rows={rows} headers={headers} ></Tabla>
-                        <Button fullWidth variant="contained" >Modificar Producto</Button>
+                        <div style={{display:"flex", marginTop:"20px"}}>
+                            <div style={{width:"50%"}}>
+                                <div style={{display:"flex"}}>
+                                    <div style={{width:"100%", borderRadius:"15px", backgroundColor:"#CCD1D1"}}>
+                                        <Typography style={{marginLeft:"2px", color:"#515A5A"}} variant="h5" component="h2"><b>Cliente: {cliente}</b></Typography>
+                                    </div>
+                                    <EditIcon fontSize="large" onClick={()=>{setAbrirModalBuscarCliente(true)}}/>
+                                </div>
+                                <div style={{width:"100%", borderRadius:"15px", backgroundColor:"#CCD1D1", marginTop:"10px"}}>
+                                        <Typography style={{marginLeft:"2px", color:"#515A5A"}} variant="h6" component="h2"><b>Condicion tributaria: {condicionTributaria}</b></Typography>
+                                </div>
+                            </div>
+                            <div style={{width:"50%", marginLeft:'12px'}}>
+                                <div style={{textAlign:"center"}}>
+                                    <Typography variant="h4" component="h2"><b>Subtotal: {subtotal}</b></Typography>
+                                    <Button style={{width:"50%"}} size="large" variant="contained" onClick={()=>setAbrirModalPagar(true)}>Pagar</Button>
+                                </div>
+                                
+                            </div>
+                        </div>
+                        
                     </Box>
 
                 </div>
             </div>
+            <Modal
+                open={abrirModalEliminar}
+                setOpen={setAbrirModalEliminar}
+            >
+                    <Typography id="keep-mounted-modal-title" variant="h5" component="h2">
+                        Eliminar articulo
+                    </Typography>
+                    <Typography id="keep-mounted-modal-description" sx={{ mt: 2 }}>
+                    Esta seguro que desea eliminar el articulo.. ?
+                    </Typography>
+                    <div style={{display:"flex", justifyContent:"space-between", marginTop:"20px"}}>
+                        <Button color="grey" variant="contained" onClick={()=>setAbrirModalEliminar(false)}>Cancelar</Button>
+                        <Button color="error" variant="contained" onClick={()=>console.log("Eliminando articulo")}>Eliminar</Button>
+                    </div>
+            </Modal>
+            <Modal
+                open={abrirModalBuscarCliente}
+                setOpen={setAbrirModalBuscarCliente}
+            >
+                    <Typography id="keep-mounted-modal-title" variant="h5" component="h2">
+                        Seleccione el cliente
+                    </Typography>
+                    <hr style={{width: "100%", height:"3px"}}></hr>
+                    <TextField fullWidth label="CUIT / Nombre - Razon Social / DNI" id="buscar" value={inputBuscar} onChange={e=>{setInputBuscar(e.target.value)}}/>
+                    <hr style={{width: "100%", height:"3px", marginTop:"100px"}}></hr>
+                    <div style={{display:"flex", justifyContent:"space-between", marginTop:"20px"}}>
+                        <Button color="grey" variant="contained" onClick={()=>setAbrirModalBuscarCliente(false)}>Cancelar</Button>
+                        <Button color="primary" variant="contained" onClick={()=>console.log("Buscando Cliente")}>Eliminar</Button>
+                    </div>
+
+            </Modal>
+            <Modal
+                open={abrirModalPagar}
+                setOpen={setAbrirModalPagar}
+            >
+                    <Typography id="keep-mounted-modal-title" variant="h5" component="h2">
+                        Realizar Pago
+                    </Typography>
+                    <hr style={{width: "100%", height:"3px"}}></hr>
+                    <DropDown
+                        width="100%"
+                        label="Metodo de pago"
+                        labelId="metodoDePagoId"
+                        id="metodoDePago"
+                        items={metodosDePago}
+                        value={metodoDePago}
+                        set={setMetodoDePago}
+                        />
+                    <TextField style={{marginTop:"50px"}} fullWidth label="Monto" id="buscar" value={monto} onChange={e=>{setMonto(e.target.value)}}/>
+                    <hr style={{width: "100%", height:"3px", marginTop:"50px"}}></hr>
+                    <div style={{display:"flex", justifyContent:"space-between", marginTop:"20px"}}>
+                        <Button color="grey" variant="contained" onClick={()=>setAbrirModalPagar(false)}>Cancelar</Button>
+                        <Button color="primary" variant="contained" onClick={()=>console.log("pagando")}>Cobrar</Button>
+                    </div>
+
+
+            </Modal>
         </Container>
     )
 }
