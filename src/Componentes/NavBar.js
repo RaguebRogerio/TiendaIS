@@ -16,8 +16,9 @@ import ListItem from "@mui/material/ListItem";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
 import { useHistory } from 'react-router-dom/cjs/react-router-dom.min';
-import { rootPath } from "../App";
+import { apiPath, rootPath } from "../App";
 import StorefrontIcon from '@mui/icons-material/Storefront';
+import axios from "axios";
 //Productos
 import CheckroomIcon from '@mui/icons-material/Checkroom';
 //agregar caracteristica
@@ -68,29 +69,45 @@ export default function NavBar() {
     setOpen(false);
   };
   let history =useHistory()
+  const cerrarSesion  = ()=>{
+    const data = {
+      "legajo":Number(window.localStorage.getItem("legajo"))
+    }
+    axios.post(apiPath + "/Users/CerrarSesion", data)
+    .then(response=>{
+      if(response.data.success){
+        console.log("Entro aca")
+        window.localStorage.clear()
+        history.push("/")
+      }else{
+        console.log("error al salir. Pone un modal ura")
+      }
+    })
+  }
   const rutas = [
       {
           name:"Agregar caracteristica",
-          direccion: rootPath + "/agregarcaracteristica",
+          click: ()=>history.push( rootPath + "/agregarcaracteristica")
       },
       {
           name:"Productos",
-          direccion: rootPath + "/producto",
+          click: ()=> history.push( rootPath + "/producto")
 
       },
       {
         name:"Realizar Venta",
-        direccion: rootPath + "/venta",
+        click: ()=> history.push( rootPath + "/venta")
+
       },
       {
         name:"Stock",
-        direccion: rootPath + "/agregarstock",
+        click: ()=> history.push( rootPath + "/agregarstock")
+
 
     },
     {
       name:"Salir",
-      direccion: "/",
-
+      click: ()=> cerrarSesion()
   },
   ]
 
@@ -155,7 +172,7 @@ export default function NavBar() {
                     route.name === "Agregar caracteristica" ? <AddBoxIcon color="primary"/>: route.name === "Realizar Venta" ? <AddShoppingCartIcon color="primary"/>
                     : <LogoutIcon color="primary"/>}
                 </ListItemIcon>
-                <ListItemText primary={route.name} onClick={()=>history.push(route.direccion)}/>
+                <ListItemText primary={route.name} onClick={route.click}/>
                 </ListItem>
             
           ))}

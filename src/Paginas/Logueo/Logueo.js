@@ -5,16 +5,46 @@ import backgroundImage from './../../imagenes/imagen-fondo-tienda.jpg'
 import { useHistory } from 'react-router-dom/cjs/react-router-dom.min';
 import  Box  from '@mui/material/Box';
 import './Logueo.css'
-import { rootPath } from '../../App';
+import { apiPath, rootPath } from '../../App';
+import ModalComponent from '../../Componentes/Modal/Modal';
+import axios from 'axios';
 const Logueo = ()=>{
     const [usuario, setUsuario] = useState("")
     const [pass, setPassword] = useState("")
-
+    //MODAL COMPLETAR DATOS
+    const [abrirModalCompletarDatos, setAbrirModalCompletarDatos] = useState(false);
+    const handleOpenModalCompletarDatos = () => setAbrirModalCompletarDatos(true);
+    //MODAL USUARIO INEXISTENTE
+    const [abrirModalUsuarioInexistente, setAbrirModalUsuarioInexistente] = useState(false);
+    const handleOpenModalUsuarioInexistente = () => setAbrirModalUsuarioInexistente(true);
     let history = useHistory()
     const ingresar = ()=>{
-        console.log(usuario, pass)
-        //Llamar a la api
-        history.push(rootPath+"/inicio");
+        if(usuario === "" || pass === ""){
+            handleOpenModalCompletarDatos()
+        }else{
+            const data = {
+                "legajo":Number(usuario),
+                "password": pass
+            }
+            axios.post(apiPath +"/Users/AutenticarUsuario", data)
+            .then(response=>{
+                if(response.data.estaAutenticado===false){
+                    handleOpenModalUsuarioInexistente()
+                }else{
+                    window.localStorage.setItem('legajo', usuario)
+                    window.localStorage.setItem('nombre', response.data.nombre)
+                    window.localStorage.setItem('estaAutenticado',response.data.estaAutenticado)
+                    window.localStorage.setItem('tipoUsuario',response.data.tipoUsuario )
+                    window.localStorage.setItem('id', response.data.id)
+
+                    history.push(rootPath+"/inicio");
+                }
+            }).catch(error=>{
+                if(error){
+                    console.log(error)
+                }
+            })
+        }
     }
     const setBackgroundImage = (url)=>{
         document.body.style.backgroundImage = url;
@@ -40,7 +70,7 @@ const Logueo = ()=>{
                         <h2 style={{textAlign:"center"}}>Iniciar sesión</h2>
                         <TextField 
                         id="outlined-basic" 
-                        label="Usuario" 
+                        label="Legajo" 
                         variant="outlined" 
                         onChange={e => setUsuario(e.target.value)} 
                         fullWidth
@@ -60,6 +90,18 @@ const Logueo = ()=>{
                         <br/>
                     <Button variant="contained" onClick={ingresar} style = {{margin:"10px"}} size="large">Ingresar</Button>
                 </form>
+                <ModalComponent
+                    open={abrirModalCompletarDatos}
+                    setOpen={setAbrirModalCompletarDatos}
+                >
+                    <h1>Debe completar los campos</h1>
+                </ModalComponent>
+                <ModalComponent
+                    open={abrirModalUsuarioInexistente}
+                    setOpen={setAbrirModalUsuarioInexistente}
+                >
+                    <h1>Usuario Inexistente</h1>
+                </ModalComponent>
             </Box>
         </div>
     )

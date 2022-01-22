@@ -19,25 +19,19 @@ const AltaProducto  = ()=>{
     const [margenGanacia, setMargenGanancia] = useState()
     //Select
     const [tipoTalle, setTipoTalle] = useState()
-    const [talle, setTalle] = useState()
     const [marca, setMarca] = useState()
     const [rubro, setRubro] = useState()
     const [iva, setIva] = useState()
 
     useEffect(()=>{
-        console.log(descripcion,precioUnitario,margenGanacia,tipoTalle,talle,marca,rubro,iva)
-    },[descripcion,precioUnitario,margenGanacia,tipoTalle,talle,marca,rubro,iva])
+        console.log(descripcion,precioUnitario,margenGanacia,tipoTalle,marca,rubro,iva)
+    },[descripcion,precioUnitario,margenGanacia,tipoTalle,marca,rubro,iva])
     //TiposTalles
     const tiposTalles = [
         'Europeo',
         'Americano'
       ];
-    //Talles
-    const talles = [
-        '40',
-        '41',
-        '42'
-    ]
+ 
     const marcas = [
         'Puma',
         'Adidas',
@@ -79,7 +73,7 @@ const AltaProducto  = ()=>{
                 noValidate
                 autoComplete="off"
             >
-                <TextField variant="filled" fullWidth disabled label="Codigo de producto" id="codigo" value={codigoProducto} />
+                <TextField variant="filled" fullWidth  label="Codigo de producto" id="codigo" value={codigoProducto} onChange={e=>{setCodigoProducto(e.targetvalue)}}/>
                 <TextField fullWidth label="Descripcion" id="descripcion" value={descripcion} onChange={e=>{setDescripcion(e.target.value)}}/>
                 <div style={{display:"flex" ,justifyContent:'space-between', width:"100%"}}>
                     <TextField style={{width:"45%"}} label="Precio unitario" id="descripcion" value={precioUnitario} onChange={e=>{setPrecioUnitario(e.target.value)}}/>
@@ -98,15 +92,6 @@ const AltaProducto  = ()=>{
                         items={tiposTalles}
                         value={tipoTalle}
                         set={setTipoTalle}
-                    />
-                    <DropDown
-                        width="90%"
-                        label="Talle"
-                        labelId="talle"
-                        id="talleId"
-                        items={talles}
-                        value={talle}
-                        set={setTalle}
                     />
                     <DropDown
                         width="90%"

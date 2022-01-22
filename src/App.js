@@ -10,7 +10,7 @@ import AgregarStock from './Paginas/AgregarStock/AgregarStock';
 import AltaProducto from './Paginas/Productos/AltaProducto'
 import ModificarProducto from './Paginas/Productos/ModificacionProducto'
 export const rootPath = "/tiendaOnline";
-
+export const apiPath = "http://localhost:3000/api"
 function App() {
 
   return (
