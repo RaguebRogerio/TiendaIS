@@ -12,20 +12,35 @@ const AltaProducto  = ()=>{
     let history = useHistory()
     //Input
     const [codigoProducto, setCodigoProducto] = useState("1341345")
-    const [netoGravado, setNetoGravado] = useState(123123)
-    const [precioVenta, setPrecioDeVenta] = useState(44444)
+    const [netoGravado, setNetoGravado] = useState()
+    const [precioVenta, setPrecioDeVenta] = useState()
     const [descripcion, setDescripcion] = useState()
     const [precioUnitario, setPrecioUnitario] = useState()
     const [margenGanacia, setMargenGanancia] = useState()
+    const [costoIva, setCostoIva] = useState()
     //Select
     const [tipoTalle, setTipoTalle] = useState()
     const [marca, setMarca] = useState()
     const [rubro, setRubro] = useState()
-    const [iva, setIva] = useState()
+    const [iva, setIva] = useState('21%')
 
-    useEffect(()=>{
+  /*   useEffect(()=>{
         console.log(descripcion,precioUnitario,margenGanacia,tipoTalle,marca,rubro,iva)
-    },[descripcion,precioUnitario,margenGanacia,tipoTalle,marca,rubro,iva])
+    },[descripcion,precioUnitario,margenGanacia,tipoTalle,marca,rubro,iva]) */
+    useEffect(()=>{
+        setNetoGravado(0)
+        setPrecioDeVenta(0)
+        setPrecioUnitario(0)
+        setMargenGanancia(0)
+    },[])
+    useEffect(()=>{
+        const netoGravadoAux = Number (precioUnitario) + (Number (precioUnitario)* Number(margenGanacia))
+        const costoIvaAux =  netoGravadoAux * Number (iva.substring(0,2)) / 100
+        const precioVentaAux = netoGravadoAux + costoIvaAux
+        setNetoGravado(netoGravadoAux)
+        setCostoIva(costoIvaAux)
+        setPrecioDeVenta(precioVentaAux)
+    },[precioUnitario, iva, margenGanacia])
     //TiposTalles
     const tiposTalles = [
         'Europeo',
@@ -84,43 +99,49 @@ const AltaProducto  = ()=>{
                     <TextField style={{width:"45%"}} disabled variant="filled" label="Precio de venta" id="precioVenta" value={"$ " +precioVenta} />
                 </div>
                 <div style={{textAlign:'center'}}>
-                    <DropDown
-                        width="90%"
-                        label="Tipo de talle"
-                        labelId="tipoTalle"
-                        id="tipoTalleId"
-                        items={tiposTalles}
-                        value={tipoTalle}
-                        set={setTipoTalle}
-                    />
-                    <DropDown
-                        width="90%"
-                        label="Marca"
-                        labelId="marca"
-                        id="marcaId"
-                        items={marcas}
-                        value={marca}
-                        set={setMarca}
-                    />
-                    <DropDown
-                        width="90%"
-                        label="Rubros"
-                        labelId="rubros"
-                        id="rubrosId"
-                        items={rubros}
-                        value={rubro}
-                        set={setRubro}
-                    />
-                    <DropDown
-                        width="90%"
-                        label="Iva's"
-                        labelId="IVA"
-                        id="IVAId"
-                        items={ivas}
-                        value={iva}
-                        set={setIva}
-                    />
-                   
+                    
+                        <DropDown
+                            width="90%"
+                            label="Tipo de talle"
+                            labelId="tipoTalle"
+                            id="tipoTalleId"
+                            items={tiposTalles}
+                            value={tipoTalle}
+                            set={setTipoTalle}
+                        />
+                    <div style={{marginTop:"5px"}}>
+                        <DropDown
+                            width="90%"
+                            label="Marca"
+                            labelId="marca"
+                            id="marcaId"
+                            items={marcas}
+                            value={marca}
+                            set={setMarca}
+                        />
+                    </div>
+                    <div style={{marginTop:"5px"}}>
+                        <DropDown
+                            width="90%"
+                            label="Rubros"
+                            labelId="rubros"
+                            id="rubrosId"
+                            items={rubros}
+                            value={rubro}
+                            set={setRubro}
+                        />
+                    </div>
+                    <div style={{marginTop:"5px"}}>
+                        <DropDown
+                            width="90%"
+                            label="Iva's"
+                            labelId="IVA"
+                            id="IVAId"
+                            items={ivas}
+                            value={iva}
+                            set={setIva}
+                        />
+                    </div>
                 </div>
                 <div style={{textAlign:'center'}}>
                     <Button fullWidth variant="contained" onClick={()=>{crearProducto()}}>Crear producto</Button>

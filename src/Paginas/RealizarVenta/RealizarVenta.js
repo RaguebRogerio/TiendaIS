@@ -153,7 +153,7 @@ const RealizarVenta = ()=>{
                     <hr style={{width: "100%", height:"3px", marginTop:"100px"}}></hr>
                     <div style={{display:"flex", justifyContent:"space-between", marginTop:"20px"}}>
                         <Button color="grey" variant="contained" onClick={()=>setAbrirModalBuscarCliente(false)}>Cancelar</Button>
-                        <Button color="primary" variant="contained" onClick={()=>console.log("Buscando Cliente")}>Eliminar</Button>
+                        <Button color="primary" variant="contained" onClick={()=>console.log("Buscando Cliente")}>Buscar</Button>
                     </div>
 
             </Modal>
