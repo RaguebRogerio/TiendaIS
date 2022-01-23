@@ -5,7 +5,7 @@ import TextField from '@mui/material/TextField';
 import Box from '@mui/material/Box';
 import DropDown from "../../Componentes/Select/Select";
 import Tabla from "../../Componentes/Tabla/Tabla"
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Modal from "../../Componentes/Modal/Modal"
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import Typography from "@mui/material/Typography";
@@ -23,6 +23,8 @@ const RealizarVenta = ()=>{
     const [abrirModalEliminar, setAbrirModalEliminar] = useState(false);
     const [abrirModalPagar, setAbrirModalPagar] = useState()
     const [abrirModalBuscarCliente, setAbrirModalBuscarCliente] = useState()
+    //Modal de eliminar
+    const [descripcionArticuloSeleccionado, setDescripcionArticuloSeleccionado] = useState()
     //Modal de buscar
     const [inputBuscar, setInputBuscar] =useState()
     //ModalPagar
@@ -37,6 +39,8 @@ const RealizarVenta = ()=>{
     const [condicionTributaria, setCondicionTributaria] = useState("CONSUMIDOR FINAL")
     //SubTotal
     const [subtotal, setSubTotal] = useState(0)
+    //Tabla
+    const [dataTable, setDataTable] = useState([])
     //Colores
     const colores = [
         'rojo',
@@ -49,15 +53,32 @@ const RealizarVenta = ()=>{
         {text:"Descripcion", key:"descripcion"},
         {text:"Precio", key:"precio"},
         {text:"Cantidad", key:"cantidad"},
-        {text:"Eliminar",key:"eliminar", click:()=>setAbrirModalEliminar(true)},
+        {text:"Eliminar",key:"eliminar", click:(codigo)=>{console.log(codigo); setDescripcionArticuloSeleccionado(codigo); setAbrirModalEliminar(true); }},
     ]
-    const rows = [
-        {descripcion: 'Remera Puma1', precio:'$ 200', cantidad: 1,eliminar: <DeleteForeverIcon color="primary"/>},
-        {descripcion: 'Remera Puma2', precio:'$ 200', cantidad: 2,eliminar: <DeleteForeverIcon color="primary"/>},
-        {descripcion: 'Remera Puma3', precio:'$ 200', cantidad: 3,eliminar: <DeleteForeverIcon color="primary"/>},
-        {descripcion: 'Remera Puma4', precio:'$ 200', cantidad: 4,eliminar: <DeleteForeverIcon color="primary"/>},
-        {descripcion: 'Remera Puma5', precio:'$ 200', cantidad: 5,eliminar: <DeleteForeverIcon color="primary"/>}
-      ];
+      //Funcion para agregar un producto a la tabla y actualizar el subtotal
+      const agregarProducto= ()=>{
+        const dateTableAux = dataTable
+        dateTableAux.push({codigo:"1" ,descripcion: 'Remera Puma1', precio:200, cantidad: 1,eliminar: <DeleteForeverIcon color="primary"/>})
+        dateTableAux.push({codigo:"2" ,descripcion: 'Remera Puma2', precio:200, cantidad: 1,eliminar: <DeleteForeverIcon color="primary"/>})
+        setDataTable([...dateTableAux])
+      }
+      //Funciones para eliminar un producto
+      const eliminarProducto = (id)=>{
+          const dataTableAux = dataTable.filter(function(data){
+              return data.descripcion !== id
+          })
+          setDataTable([...dataTableAux])
+          setAbrirModalEliminar(false)
+      }
+      //Funcion que calcula el subTotal
+      useEffect(()=>{
+        let subTotalAux = 0
+        dataTable.map((fila)=>{
+            subTotalAux = subTotalAux + Number(fila.precio)
+        })
+        setSubTotal(subTotalAux)
+      },[dataTable])
+
     return(
         <Container>
             <NavBar></NavBar>
@@ -88,7 +109,7 @@ const RealizarVenta = ()=>{
                         />
                         <TextField fullWidth label="Cantidad" id="cantidad" value={cantidad} onChange={e=>{setCantidad(e.target.value)}}/>
 
-                        <Button fullWidth variant="contained" onClick={()=>{}}>Agregar</Button>
+                        <Button fullWidth variant="contained" onClick={agregarProducto}>Agregar</Button>
                     </Box>
                 </div>
                 <div style={{width:"70%", marginLeft:'40px'}}>
@@ -100,7 +121,7 @@ const RealizarVenta = ()=>{
                     noValidate
                     autoComplete="off"
                     >
-                        <Tabla rows={rows} headers={headers} ></Tabla>
+                        <Tabla rows={dataTable} headers={headers} idColumn={"descripcion"}></Tabla>
                         <div style={{display:"flex", marginTop:"20px"}}>
                             <div style={{width:"50%"}}>
                                 <div style={{display:"flex"}}>
@@ -115,7 +136,7 @@ const RealizarVenta = ()=>{
                             </div>
                             <div style={{width:"50%", marginLeft:'12px'}}>
                                 <div style={{textAlign:"center"}}>
-                                    <Typography variant="h4" component="h2"><b>Subtotal: {subtotal}</b></Typography>
+                                    <Typography variant="h4" component="h2"><b> Subtotal: $ {subtotal}</b></Typography>
                                     <Button style={{width:"50%"}} size="large" variant="contained" onClick={()=>setAbrirModalPagar(true)}>Pagar</Button>
                                 </div>
                                 
@@ -134,11 +155,11 @@ const RealizarVenta = ()=>{
                         Eliminar articulo
                     </Typography>
                     <Typography id="keep-mounted-modal-description" sx={{ mt: 2 }}>
-                    Esta seguro que desea eliminar el articulo.. ?
+                    Esta seguro que desea eliminar el articulo {descripcionArticuloSeleccionado} ?
                     </Typography>
                     <div style={{display:"flex", justifyContent:"space-between", marginTop:"20px"}}>
                         <Button color="grey" variant="contained" onClick={()=>setAbrirModalEliminar(false)}>Cancelar</Button>
-                        <Button color="error" variant="contained" onClick={()=>console.log("Eliminando articulo")}>Eliminar</Button>
+                        <Button color="error" variant="contained" onClick={()=>eliminarProducto(descripcionArticuloSeleccionado)}>Eliminar</Button>
                     </div>
             </Modal>
             <Modal

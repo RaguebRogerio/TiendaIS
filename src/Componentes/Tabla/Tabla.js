@@ -7,6 +7,7 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
+import { useEffect } from 'react';
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
     backgroundColor: "#1976d2",
@@ -43,9 +44,6 @@ export default function Tabla(props) {
               {props.headers.map((header)=>(
                   <StyledTableCell align="center" onClick={()=>header.click(row[props.idColumn])}>{row[header.key]}</StyledTableCell>
               ))}
-{/*           <StyledTableCell align="center">{row.precio}</StyledTableCell>
-              <StyledTableCell align="center" onClick={()=>history.push(rootPath + '/editarproducto')}>{row.editar}</StyledTableCell>
-              <StyledTableCell align="center" onClick={props.actionEliminar}>{row.eliminar}</StyledTableCell> */}
             </StyledTableRow>
           ))}
         </TableBody>
