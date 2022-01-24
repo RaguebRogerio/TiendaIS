@@ -76,7 +76,6 @@ export default function NavBar() {
     axios.post(apiPath + "/Users/CerrarSesion", data)
     .then(response=>{
       if(response.data.success){
-        console.log("Entro aca")
         window.localStorage.clear()
         history.push("/")
       }else{

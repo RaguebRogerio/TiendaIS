@@ -5,10 +5,11 @@ import TextField from '@mui/material/TextField';
 import DropDown from "../../Componentes/Select/Select";
 import { useState } from "react";
 import ModalComponent from "../../Componentes/Modal/Modal";
-import { rootPath } from "../../App";
+import { apiPath, rootPath } from "../../App";
 import { useHistory } from "react-router-dom/cjs/react-router-dom.min";
 import Button from '@mui/material/Button';
-
+import NewReleasesIcon from '@mui/icons-material/NewReleases';
+import axios from "axios";
 const AgregarCaracteristica = ()=>{
     let history = useHistory()
     //TextField
@@ -23,10 +24,55 @@ const AgregarCaracteristica = ()=>{
     ]
     //Modal
     const [abrirModal, setAbrirModal] = useState(false);
+    const [abrirModalError, setAbrirModalError] = useState(false)
     const handleOpen = () => setAbrirModal(true);
     //Funcion crearCarasteristica
     const crearCaracteristica = ()=>{
-        handleOpen()
+        const body = {
+            descripcion: descripcionCaracteristica
+        }
+        if(caracteristica === "Color"){
+            axios.post(apiPath + "/Colors/CreateColor")
+            .then(response=>{
+                handleOpen()
+            }).catch(err=>{
+                if(err){
+                    console.log(err)
+                    setAbrirModalError(true)
+                }
+            })
+        }else if(caracteristica === "Marca"){
+            axios.post(apiPath + "/Marcas/CreateMarca")
+            .then(response=>{
+                handleOpen()
+            }).catch(err=>{
+                if(err){
+                    console.log(err)
+                    setAbrirModalError(true)
+                }
+            })
+        }else if(caracteristica === "Rubro"){
+            axios.post(apiPath + "/Rubros/CreateRubros")
+            .then(response=>{
+                handleOpen()
+            }).catch(err=>{
+                if(err){
+                    console.log(err)
+                    setAbrirModalError(true)
+                }
+            })
+        }else{
+            axios.post(apiPath + "/Sucursal/CreateSucursal")
+            .then(response=>{
+                handleOpen()
+            }).catch(err=>{
+                if(err){
+                    console.log(err)
+                    setAbrirModalError(true)
+                }
+            })
+        }
+
 
     }
     return(
@@ -61,6 +107,16 @@ const AgregarCaracteristica = ()=>{
             >
                 <h1>Caracteristica agregada</h1>
                 <Button variant="contained" onClick={()=>{history.push(rootPath + '/inicio')}}>Genial !</Button>
+            </ModalComponent>
+            <ModalComponent
+                open={abrirModalError}
+                setOpen={setAbrirModalError}
+            >
+                <h3>Error al  agregar caracteristica</h3>
+                <div style={{textAlign:"center"}}>
+                    <NewReleasesIcon style={{width:"100px", height:"100px"}} color="red" size="large"/>
+                </div>
+                <Button variant="contained" onClick={()=>{setAbrirModalError(false)}}>Entendido</Button>
             </ModalComponent>
         </Container>
     )
