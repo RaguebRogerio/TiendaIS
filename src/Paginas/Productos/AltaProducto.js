@@ -109,7 +109,7 @@ const AltaProducto  = ()=>{
                             value={tipoTalle}
                             set={setTipoTalle}
                         />
-                    <div style={{marginTop:"5px"}}>
+                    <div style={{marginTop:"20px"}}>
                         <DropDown
                             width="90%"
                             label="Marca"
@@ -120,7 +120,7 @@ const AltaProducto  = ()=>{
                             set={setMarca}
                         />
                     </div>
-                    <div style={{marginTop:"5px"}}>
+                    <div style={{marginTop:"20px"}}>
                         <DropDown
                             width="90%"
                             label="Rubros"
@@ -131,7 +131,7 @@ const AltaProducto  = ()=>{
                             set={setRubro}
                         />
                     </div>
-                    <div style={{marginTop:"5px"}}>
+                    <div style={{marginTop:"20px"}}>
                         <DropDown
                             width="90%"
                             label="Iva's"
