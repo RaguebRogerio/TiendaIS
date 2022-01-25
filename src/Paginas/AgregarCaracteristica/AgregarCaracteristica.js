@@ -29,10 +29,11 @@ const AgregarCaracteristica = ()=>{
     //Funcion crearCarasteristica
     const crearCaracteristica = ()=>{
         const body = {
-            descripcion: descripcionCaracteristica
+            "description": ""+descripcionCaracteristica
         }
+        console.log(body)
         if(caracteristica === "Color"){
-            axios.post(apiPath + "/Colors/CreateColor")
+            axios.post(apiPath + "/Colors/CreateColor", body)
             .then(response=>{
                 handleOpen()
             }).catch(err=>{
@@ -42,7 +43,7 @@ const AgregarCaracteristica = ()=>{
                 }
             })
         }else if(caracteristica === "Marca"){
-            axios.post(apiPath + "/Marcas/CreateMarca")
+            axios.post(apiPath + "/Marcas/CreateMarca", body)
             .then(response=>{
                 handleOpen()
             }).catch(err=>{
@@ -52,7 +53,7 @@ const AgregarCaracteristica = ()=>{
                 }
             })
         }else if(caracteristica === "Rubro"){
-            axios.post(apiPath + "/Rubros/CreateRubros")
+            axios.post(apiPath + "/Rubros/CreateRubros", body)
             .then(response=>{
                 handleOpen()
             }).catch(err=>{
@@ -62,7 +63,7 @@ const AgregarCaracteristica = ()=>{
                 }
             })
         }else{
-            axios.post(apiPath + "/Sucursal/CreateSucursal")
+            axios.post(apiPath + "/Sucursal/CreateSucursal", body)
             .then(response=>{
                 handleOpen()
             }).catch(err=>{
