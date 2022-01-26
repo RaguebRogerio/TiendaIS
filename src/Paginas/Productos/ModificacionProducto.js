@@ -7,74 +7,112 @@ import Button from '@mui/material/Button';
 import Modal from "../../Componentes/Modal/Modal"
 import { useEffect, useState } from "react";
 import { useHistory } from "react-router-dom/cjs/react-router-dom.min";
-import { rootPath } from "../../App";
+import { apiPath, rootPath } from "../../App";
+import { useParams } from "react-router";
+import axios from "axios";
 const ModificarProducto  = ()=>{
     let history = useHistory()
     //Input
     const [codigoProducto, setCodigoProducto] = useState("1341345")
     const [netoGravado, setNetoGravado] = useState(123123)
     const [precioVenta, setPrecioDeVenta] = useState(44444)
-    const [descripcion, setDescripcion] = useState()
+    const [descripcion, setDescripcion] = useState("")
     const [precioUnitario, setPrecioUnitario] = useState()
     const [margenGanacia, setMargenGanancia] = useState()
     const [costoIva, setCostoIva] = useState()
     //Select
     const [tipoTalle, setTipoTalle] = useState()
-    const [talle, setTalle] = useState()
     const [marca, setMarca] = useState()
     const [rubro, setRubro] = useState()
-    const [iva, setIva] = useState('21%')
-
-    useEffect(()=>{
+    const [iva, setIva] = useState("21%")
+    let { codigo } = useParams();
+ /*    useEffect(()=>{
         console.log(descripcion,precioUnitario,margenGanacia,tipoTalle,talle,marca,rubro,iva)
-    },[descripcion,precioUnitario,margenGanacia,tipoTalle,talle,marca,rubro,iva])
-    
+    },[descripcion,precioUnitario,margenGanacia,tipoTalle,talle,marca,rubro,iva]) */
+    const [marcas, setMarcas] = useState([])
+    const [rubros, setRubros] = useState([])
     useEffect(()=>{
         setNetoGravado(0)
         setPrecioDeVenta(0)
         setPrecioUnitario(0)
         setMargenGanancia(0)
+        setIva(21)
+         //Pongo las marcas en el dropDown de marcas
+         axios.get(apiPath+ "/Marcas/GetMarcas", {})
+         .then(response =>{
+             
+             setMarcas(response.data.marcas)
+         }).catch(err=>{
+             console.log(err)
+         })
+         //Pongo los rubros en sus dropdowns
+         axios.get(apiPath+ "/Rubros/GetRubros", {})
+         .then(response =>{
+ 
+             setRubros(response.data.rubros)
+         }).catch(err=>{
+             console.log(err)
+         })
+
+        setCodigoProducto(codigo)
+        const body = {
+            "codigoProducto": "" + codigo
+        }
+        console.log(body)
+        axios.get(apiPath + "/Productos/GetProductoById?CodigoProducto="+codigo)
+        .then(response=>{
+            setPrecioUnitario(response.data.producto.costo)
+            setDescripcion(response.data.producto.descripcion)
+            setMargenGanancia(response.data.producto.margenGanancia)
+            setMarca(response.data.producto.marca.id)
+        })
+        .catch(err=>{
+            if(err){
+                console.log(err)
+            }
+        })
     },[])
     useEffect(()=>{
         const netoGravadoAux = Number (precioUnitario) + (Number (precioUnitario)* Number(margenGanacia))
-        const costoIvaAux =  netoGravadoAux * Number (iva.substring(0,2)) / 100
+        const costoIvaAux =  netoGravadoAux * Number (iva) / 100
         const precioVentaAux = netoGravadoAux + costoIvaAux
         setNetoGravado(netoGravadoAux)
         setCostoIva(costoIvaAux)
         setPrecioDeVenta(precioVentaAux)
     },[precioUnitario, iva, margenGanacia])
-    //TiposTalles
-    const tiposTalles = [
-        'Europeo',
-        'Americano'
-      ];
-    //Talles
-    const talles = [
-        '40',
-        '41',
-        '42'
-    ]
-    const marcas = [
-        'Puma',
-        'Adidas',
-        'Nike'
-    ]
-    const rubros =[
-        'remeras',
-        'camisas',
-        'chombas',
-        'pantalon',
-        'remeras',
-        'camisas',
-        'chombas',
-        'pantalon'
-    ]
-    const ivas = [
-        '10%',
-        '12%',
-        '15%',
-        '21%'
-    ]
+        //TiposTalles
+        const tiposTalles = [
+            {
+              id:1,
+              descripcion:'Europeo'
+            },
+            {
+                id: 2,
+               descripcion: 'EEUU'
+            },
+            {
+                id:3,
+               descripcion: 'Latino'
+            }
+          ];
+          const ivas = [
+            {
+                id: 10,
+                descripcion: '10%'
+            },
+            {
+                id:12,
+                descripcion: '12%'
+            },
+            {
+                id:15,
+                descripcion:'15%'
+            },
+            {
+                id:21,
+                descripcion: '21%'
+            }
+        ]
     //Modal
     const [abrirModal, setAbrirModal] = useState(false);
     const handleOpen = () => setAbrirModal(true);

@@ -17,10 +17,10 @@ const AgregarCaracteristica = ()=>{
     //DropDown
     const [caracteristica, setCaracteristica]= useState("")
     const caracteristicas = [
-        'Color',
-        'Marca',
-        'Sucursal',
-        'Rubro'
+        {id:'Color', descripcion:'Color'},
+        {id:'Marca', descripcion:'Marca'},
+        {id:'Sucursal', descripcion: 'Sucursal'},
+        {id:'Rubro', descripcion: 'Rubro'}
     ]
     //Modal
     const [abrirModal, setAbrirModal] = useState(false);

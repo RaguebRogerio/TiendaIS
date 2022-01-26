@@ -40,7 +40,7 @@ export default function Tabla(props) {
         </TableHead>
         <TableBody>
           {props.rows.map((row) => (
-            <StyledTableRow key={row.descripcion}>
+            <StyledTableRow key={row.codigo}>
               {props.headers.map((header)=>(
                   <StyledTableCell align="center" onClick={()=>header.click(row[props.idColumn])}>{row[header.key]}</StyledTableCell>
               ))}

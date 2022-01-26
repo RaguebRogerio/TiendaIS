@@ -59,9 +59,9 @@ const AltaProducto  = ()=>{
                 descripcion: '21%'
             }
         ]
-    useEffect(()=>{
+/*     useEffect(()=>{
         console.log(codigoProducto, descripcion,precioUnitario,margenGanacia,tipoTalle,marca,rubro,iva)
-    },[descripcion,precioUnitario,margenGanacia,tipoTalle,marca,rubro,iva,codigoProducto])
+    },[descripcion,precioUnitario,margenGanacia,tipoTalle,marca,rubro,iva,codigoProducto]) */
     useEffect(()=>{
         setNetoGravado(0)
         setPrecioDeVenta(0)
