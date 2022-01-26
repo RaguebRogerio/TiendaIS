@@ -29,7 +29,7 @@ const Productos = ()=>{
 
 
     let history = useHistory();
-    useEffect(()=>{
+    const cargarProductos = ()=>{
         axios.get( apiPath + "/Productos/GetProductos",{})
         .then(response=>{
             let productosAux = []
@@ -44,14 +44,18 @@ const Productos = ()=>{
                 console.log(err)
             }
         })
+    }
+    useEffect(()=>{
+        cargarProductos()
     },[])
     const eliminarProducto = (codigo)=>{
         const body = {
             "codigoProducto": "" + codigo
         }
         console.log(body)
-        axios.delete(apiPath + "/Productos/DeleteProducto", body)
+        axios.delete(apiPath + "/Productos/DeleteProducto?CodigoProducto=" +codigo)
         .then(response=>{
+            cargarProductos()
             setAbrirModalEliminacionCorrecta(true)
             console.log(response)
         }).catch(err=>{

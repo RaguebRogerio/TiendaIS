@@ -19,6 +19,7 @@ const ModificarProducto  = ()=>{
     const [descripcion, setDescripcion] = useState("")
     const [precioUnitario, setPrecioUnitario] = useState()
     const [margenGanacia, setMargenGanancia] = useState()
+    const [id, setId] =useState()
     const [costoIva, setCostoIva] = useState()
     //Select
     const [tipoTalle, setTipoTalle] = useState()
@@ -55,12 +56,10 @@ const ModificarProducto  = ()=>{
          })
 
         setCodigoProducto(codigo)
-        const body = {
-            "codigoProducto": "" + codigo
-        }
-        console.log(body)
         axios.get(apiPath + "/Productos/GetProductoById?CodigoProducto="+codigo)
         .then(response=>{
+            console.log(response.data.producto)
+            setId(response.data.producto.id)
             setPrecioUnitario(response.data.producto.costo)
             setDescripcion(response.data.producto.descripcion)
             setMargenGanancia(response.data.producto.margenGanancia)
@@ -118,8 +117,28 @@ const ModificarProducto  = ()=>{
     const handleOpen = () => setAbrirModal(true);
     //Funcion de crear producto
     const modificarProducto = ()=>{
-        console.log("Crear Producto")
-        handleOpen()
+        const body = {
+            "id":id,
+            "codigoProducto": "" + codigoProducto,
+            "descripcion": "" + descripcion,
+            "costo":Number( precioUnitario),
+            "idMarca":  Number(marca),
+            "margenGanancia": Number(margenGanacia),
+            "idRubro": Number(rubro),
+            "iva": Number(iva),
+            "tipoTalle": Number(tipoTalle)
+        }
+        console.log(body)
+        axios.put(apiPath + "/Productos/UpdateProducto", body)
+        .then(response=>{
+            console.log(response)
+            handleOpen()
+        })
+        .catch(err=>{
+            if(err){
+                console.log(err)
+            }
+        })
     }
     return(
         <Container>
@@ -195,7 +214,7 @@ const ModificarProducto  = ()=>{
             open={abrirModal}
             setOpen={setAbrirModal}
             >
-                <h1>Modificar producto</h1>
+                <h1>Producto modificado</h1>
                 <Button variant="contained" onClick={()=>{history.push(rootPath +'/producto')}}>Confirmar</Button>
             </Modal>
         </Container>
