@@ -1,41 +1,94 @@
 import NavBar from "../../Componentes/NavBar"
 import Container from "../../Componentes/Container/Container"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import DropDown from "../../Componentes/Select/Select";
-
+import axios from "axios";
+import { apiPath } from "../../App";
+import Modal from "../../Componentes/Modal/Modal";
 const AgregarStock = ()=>{
     //Producto
     const [codigoProducto, setCodigoProducto] = useState()
-    const [descripcion, setDescripcion] = useState()
+    const [descripcion, setDescripcion] = useState("")
+    const [tipoTalle, setTipoTalle]= useState(0)
     const [talle, setTalle] = useState()
     const [color, setColor] = useState()
     const [sucursal, setSucursal] = useState()
     const [cantidad, setCantidad] = useState()
-    //talles
-    const talles = [
-        'S',
-        'X',
-        'XL'
-    ]
-    //Colores
-    const colores = [
-        'rojo',
-        'azul',
-        'gris',
-        'naranja'
-    ]
-    //Sucursales
-    const sucursales = [
-        'Lavalle 500',
-        'Congreso 261',
-        'Av. Mitre 1120'
-    ]
-    //Funcion para agregar Stock
+    
+    //DropDowns
+    const [talles, setTalles] =useState([])
+    const [colores, setColores] = useState([])
+    const [sucursales, setSucursales] = useState([])
+    //Modal
+    const [abrirModalExito, setAbrirModalExito] = useState(false)
+   const cargarDropDowns = ()=>{
+        //talles
+        axios.get(apiPath + "/Talles/GetTallesByType?tipoTalle="+ tipoTalle, {})
+        .then(response=>{
+            setTalles(response.data)
+        })
+        .catch(err=>{
+            if(err){
+                console.log(err)
+            }
+        })
+        //Colores
+        axios.get(apiPath + "/Colors/GetColores?CodigoProducto=" + codigoProducto,{})
+        .then(response=>{
+            setColores(response.data)
+        })
+        .catch(err=>{
+            if(err){
+                console.log(err)
+            }
+        })
+        //Sucursales
+        axios.get(apiPath + "/Sucursal/GetSucusales", {})
+        .then(response=>{
+            setSucursales(response.data)
+        })
+        .catch(err=>{
+            if(err){
+                console.log(err)
+            }
+        })
+    }
+    const buscarProducto = (ev)=>{
+            if (ev.key === 'Enter') {
+            axios.get(apiPath + "/Productos/GetProductoById?CodigoProducto="+codigoProducto)
+            .then(response=>{
+            setDescripcion(response.data.producto.descripcion)
+            setTipoTalle(response.data.producto.tipoTalle)
+            cargarDropDowns()
+        })
+        .catch(err=>{
+            if(err){
+                console.log(err)
+            }
+        })
+        }
+    }
     const AgregarStockInventario = ()=>{
-        console.log("Agrego Stock")
+        const body = {
+            "idTalle": Number(talle),
+            "idColor": Number(color),
+            "codigoProducto": "" + codigoProducto,
+            "idSucursal": Number(sucursal),
+            "cantidad": Number(cantidad)
+        }
+       axios.post(apiPath + "/Stock/AgregarStock", body)
+       .then(response=>{
+            console.log(response.data)
+            setAbrirModalExito(true)
+       })
+       .catch(err=>{
+           if(err){
+               console.log(err)
+           }
+       })
     }
     return(
         <div>
@@ -50,7 +103,7 @@ const AgregarStock = ()=>{
                 noValidate
                 autoComplete="off"
             >
-                <TextField fullWidth  label="Codigo de producto" id="codigo" value={codigoProducto} onChange={e=>{setCodigoProducto(e.targetvalue)}}/>
+                <TextField fullWidth  label="Codigo de producto" id="codigo" value={codigoProducto} onChange={e=>{setCodigoProducto(e.target.value)}} onKeyPress={(e)=>buscarProducto(e)}/>
                 <TextField variant="filled" disabled fullWidth label="Descripcion" id="descripcion" value={descripcion} onChange={e=>{setDescripcion(e.target.value)}}/>
                 <div style={{textAlign:'center'}}>
 
@@ -91,6 +144,13 @@ const AgregarStock = ()=>{
                 <TextField fullWidth  label="Cantidad" id="codigo" value={cantidad} onChange={e=>{setCantidad(e.targetvalue)}}/>
                 <Button fullWidth size="large" variant="contained" onClick={()=>{AgregarStockInventario()}}>Agregar Stock</Button>
             </Box>
+            <Modal
+            open={abrirModalExito}
+            setOpen={setAbrirModalExito}
+            >
+                <h1>Stock agregado correctamente</h1>
+                <Button variant="contained" onClick={()=>{setAbrirModalExito(false)}}>Confirmar</Button>
+            </Modal>
                    
             </Container>
         </div>
