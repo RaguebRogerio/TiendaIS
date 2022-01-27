@@ -82,15 +82,15 @@ const ModificarProducto  = ()=>{
         //TiposTalles
         const tiposTalles = [
             {
-              id:1,
+              id:0,
               descripcion:'Europeo'
             },
             {
-                id: 2,
+                id: 1,
                descripcion: 'EEUU'
             },
             {
-                id:3,
+                id:2,
                descripcion: 'Latino'
             }
           ];

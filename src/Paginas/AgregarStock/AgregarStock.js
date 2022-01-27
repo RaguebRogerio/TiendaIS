@@ -1,6 +1,6 @@
 import NavBar from "../../Componentes/NavBar"
 import Container from "../../Componentes/Container/Container"
-import { useEffect, useState } from "react"
+import {  useState } from "react"
 import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
@@ -12,7 +12,6 @@ const AgregarStock = ()=>{
     //Producto
     const [codigoProducto, setCodigoProducto] = useState()
     const [descripcion, setDescripcion] = useState("")
-    const [tipoTalle, setTipoTalle]= useState(0)
     const [talle, setTalle] = useState()
     const [color, setColor] = useState()
     const [sucursal, setSucursal] = useState()
@@ -24,11 +23,13 @@ const AgregarStock = ()=>{
     const [sucursales, setSucursales] = useState([])
     //Modal
     const [abrirModalExito, setAbrirModalExito] = useState(false)
-   const cargarDropDowns = ()=>{
+   const cargarDropDowns = (tipoTalle)=>{
+        console.log(tipoTalle)
         //talles
         axios.get(apiPath + "/Talles/GetTallesByType?tipoTalle="+ tipoTalle, {})
         .then(response=>{
-            setTalles(response.data)
+            console.log("talles:", response.data)
+            setTalles(response.data.talles)
         })
         .catch(err=>{
             if(err){
@@ -36,9 +37,11 @@ const AgregarStock = ()=>{
             }
         })
         //Colores
-        axios.get(apiPath + "/Colors/GetColores?CodigoProducto=" + codigoProducto,{})
+        axios.get(apiPath + "/Colors/GetColores" ,{})
         .then(response=>{
-            setColores(response.data)
+            setColores(response.data.colores)
+            
+
         })
         .catch(err=>{
             if(err){
@@ -48,7 +51,9 @@ const AgregarStock = ()=>{
         //Sucursales
         axios.get(apiPath + "/Sucursal/GetSucusales", {})
         .then(response=>{
-            setSucursales(response.data)
+            setSucursales(response.data.sucursales)
+            
+
         })
         .catch(err=>{
             if(err){
@@ -61,8 +66,7 @@ const AgregarStock = ()=>{
             axios.get(apiPath + "/Productos/GetProductoById?CodigoProducto="+codigoProducto)
             .then(response=>{
             setDescripcion(response.data.producto.descripcion)
-            setTipoTalle(response.data.producto.tipoTalle)
-            cargarDropDowns()
+            cargarDropDowns(response.data.producto.tipoTalle)
         })
         .catch(err=>{
             if(err){
@@ -141,7 +145,7 @@ const AgregarStock = ()=>{
                     </div>
                     
                 </div>
-                <TextField fullWidth  label="Cantidad" id="codigo" value={cantidad} onChange={e=>{setCantidad(e.targetvalue)}}/>
+                <TextField fullWidth  label="Cantidad" id="codigo" value={cantidad} onChange={e=>{setCantidad(e.target.value)}}/>
                 <Button fullWidth size="large" variant="contained" onClick={()=>{AgregarStockInventario()}}>Agregar Stock</Button>
             </Box>
             <Modal
