@@ -10,13 +10,15 @@ import Modal from "../../Componentes/Modal/Modal"
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import Typography from "@mui/material/Typography";
 import EditIcon from '@mui/icons-material/Edit';
-const RealizarVenta = ()=>{
+import axios from "axios";
+import { apiPath } from "../../App";const RealizarVenta = ()=>{
     //Producto
     const [codigoProducto, setCodigoProducto] = useState()
-    const [descripcion, setDescripcion] = useState()
-    const [marca, setMarca] = useState()
-    const [precioUnitario, setPrecioUnitario] = useState()
+    const [descripcion, setDescripcion] = useState("")
+    const [marca, setMarca] = useState("")
+    const [precioUnitario, setPrecioUnitario] = useState(0)
     const [talle, setTalle] = useState()
+    const [talles, setTalles] = useState([])
     const [color, setColor] = useState()
     const [cantidad, setCantidad] = useState()
     //Modales
@@ -29,10 +31,9 @@ const RealizarVenta = ()=>{
     const [inputBuscar, setInputBuscar] =useState()
     //ModalPagar
     const [metodoDePago, setMetodoDePago] = useState()
-    const [monto, setMonto] = useState()
     const metodosDePago =[
-        'Efectivo',
-        'Tarjeta'
+        {id:1 ,descripcion: 'Efectivo'},
+        {id:2 ,descripcion: 'Tarjeta'}
     ]
     //CLiente
     const [cliente, setCliente] = useState("CONSUMIDOR FINAL")
@@ -42,12 +43,7 @@ const RealizarVenta = ()=>{
     //Tabla
     const [dataTable, setDataTable] = useState([])
     //Colores
-    const colores = [
-        'rojo',
-        'azul',
-        'amarillo',
-        'violeta'
-    ]
+    const [colores, setColores] = useState([])
     //Tabla
     const headers =[
         {text:"Descripcion", key:"descripcion"},
@@ -58,9 +54,15 @@ const RealizarVenta = ()=>{
       //Funcion para agregar un producto a la tabla y actualizar el subtotal
       const agregarProducto= ()=>{
         const dateTableAux = dataTable
-        dateTableAux.push({codigo:"1" ,descripcion: 'Remera Puma1', precio:200, cantidad: 1,eliminar: <DeleteForeverIcon color="primary"/>})
-        dateTableAux.push({codigo:"2" ,descripcion: 'Remera Puma2', precio:200, cantidad: 1,eliminar: <DeleteForeverIcon color="primary"/>})
+        dateTableAux.push({codigo:codigoProducto ,descripcion: descripcion, precio: precioUnitario, cantidad: cantidad,eliminar: <DeleteForeverIcon color="primary"/>})
         setDataTable([...dateTableAux])
+        setDescripcion("")
+        setCodigoProducto("")
+        setPrecioUnitario(0)
+        setTalles([])
+        setColores([])
+        setMarca("")
+        setCantidad(0)
       }
       //Funciones para eliminar un producto
       const eliminarProducto = (id)=>{
@@ -70,11 +72,63 @@ const RealizarVenta = ()=>{
           setDataTable([...dataTableAux])
           setAbrirModalEliminar(false)
       }
+      const arrayColores = (stocks)=>{
+        const setObj = new Set(); 
+          
+        const auxiliar = stocks.map(stock=>{
+            return stock.color
+        })
+        const unicos = auxiliar.reduce((acc, color) => {
+            if (!setObj.has(color.id)){
+              setObj.add(color.id, color)
+              acc.push(color)
+            }
+            return acc;
+          },[]);
+
+        setColores(unicos)
+      }
+      const arrayTalles = (stocks)=>{
+        const setObj = new Set();
+        const auxiliar = stocks.map(stock=>{
+            return stock.talle
+        })
+        const unicos = auxiliar.reduce((acc, talle) => {
+            if (!setObj.has(talle.id)){
+              setObj.add(talle.id, talle)
+              acc.push(talle)
+            }
+            return acc;
+          },[]);
+
+
+        setTalles(unicos)
+      }
+      //Funcion para buscar producto
+      const buscarProducto = (ev)=>{
+            if (ev.key === 'Enter') {
+            
+            axios.get(apiPath + "/Productos/GetProductosVenta?CodigoProducto="+codigoProducto+"&idUsuario="+localStorage.getItem("id"))
+            .then(response=>{
+                console.table(response.data)
+                setDescripcion(response.data.producto.descripcion)
+                setMarca(response.data.producto.marca.descripcion)
+                setPrecioUnitario(response.data.producto.precioVenta)
+                arrayColores(response.data.producto.stocks)
+                arrayTalles(response.data.producto.stocks)
+            })
+        .catch(err=>{
+            if(err){
+                console.log(err)
+            }
+        })
+        }
+    }
       //Funcion que calcula el subTotal
       useEffect(()=>{
         let subTotalAux = 0
         dataTable.map((fila)=>{
-            subTotalAux = subTotalAux + Number(fila.precio)
+            subTotalAux = subTotalAux + Number(fila.precio) *Number(fila.cantidad)
         })
         setSubTotal(subTotalAux)
       },[dataTable])
@@ -93,16 +147,24 @@ const RealizarVenta = ()=>{
                     noValidate
                     autoComplete="off"
                     >
-                        <TextField fullWidth label="Codigo de producto" id="codigo" value={codigoProducto} onChange={e=>{setCodigoProducto(e.target.value)}}/>
+                        <TextField fullWidth label="Codigo de producto" id="codigo" value={codigoProducto} onChange={e=>{setCodigoProducto(e.target.value)}} onKeyPress={(e)=>buscarProducto(e)}/>
                         <TextField variant="filled" fullWidth disabled label="Descripcion" id="descripcion" value={descripcion} />
                         <TextField variant="filled" fullWidth disabled label="Marca" id="marca" value={marca} />
-                        <TextField variant="filled" fullWidth disabled label="Talle" id="talle" value={talle} />
                         <TextField variant="filled" fullWidth disabled label="Precio" id="precio" value={precioUnitario} />
                         <DropDown
                         width="100%"
-                        label="Color"
+                        label="Talle"
                         labelId="tipoTalle"
                         id="tipoTalleId"
+                        items={talles}
+                        value={talle}
+                        set={setTalle}
+                        />
+                        <DropDown
+                        width="100%"
+                        label="Color"
+                        labelId="color"
+                        id="idColor"
                         items={colores}
                         value={color}
                         set={setColor}
@@ -195,7 +257,7 @@ const RealizarVenta = ()=>{
                         value={metodoDePago}
                         set={setMetodoDePago}
                         />
-                    <TextField style={{marginTop:"50px"}} fullWidth label="Monto" id="buscar" value={monto} onChange={e=>{setMonto(e.target.value)}}/>
+                    <TextField style={{marginTop:"50px"}} disabled fullWidth label="Monto" id="buscar" value={subtotal} />
                     <hr style={{width: "100%", height:"3px", marginTop:"50px"}}></hr>
                     <div style={{display:"flex", justifyContent:"space-between", marginTop:"20px"}}>
                         <Button color="grey" variant="contained" onClick={()=>setAbrirModalPagar(false)}>Cancelar</Button>
