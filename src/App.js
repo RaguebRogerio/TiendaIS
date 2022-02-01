@@ -9,6 +9,9 @@ import RealizarVenta from './Paginas/RealizarVenta/RealizarVenta';
 import AgregarStock from './Paginas/AgregarStock/AgregarStock';
 import AltaProducto from './Paginas/Productos/AltaProducto'
 import ModificarProducto from './Paginas/Productos/ModificacionProducto'
+import Clientes from './Paginas/Clientes/Clientes';
+import ClientesAlta from './Paginas/Clientes/ClientesAlta';
+import ClientesModificacion from './Paginas/Clientes/ClientesModificacion';
 export const rootPath = "/tiendaOnline";
 export const apiPath = "http://localhost:3000/api"
 function App() {
@@ -16,6 +19,9 @@ function App() {
   return (
     <div>
       <Switch>
+            <Route path = {rootPath + "/ClientesModificacion/:idCliente"} component={ClientesModificacion} children={<ClientesModificacion/>}/>
+            <Route path = {rootPath + "/ClientesAlta"} component={ClientesAlta}/>
+            <Route path = {rootPath + "/Clientes"} component={Clientes}/>
             <Route path ={rootPath + "/editarproducto/:codigo"} component={ ModificarProducto} children={<ModificarProducto />}/>
             <Route exact path ={rootPath + "/nuevoproducto"} component={ AltaProducto}/>
             <Route exact path ={rootPath + "/agregarstock"} component={ AgregarStock}/>
