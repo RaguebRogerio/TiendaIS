@@ -12,6 +12,7 @@ import IconButton from "@mui/material/IconButton";
 import MenuIcon from "@mui/icons-material/Menu";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
+import PeopleIcon from '@mui/icons-material/People';
 import ListItem from "@mui/material/ListItem";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
@@ -84,6 +85,10 @@ export default function NavBar() {
     })
   }
   const rutas = [
+      {
+        name:"Clientes",
+          click: ()=>history.push( rootPath + "/Clientes")
+      },
       {
           name:"Agregar caracteristica",
           click: ()=>history.push( rootPath + "/agregarcaracteristica")
@@ -167,7 +172,7 @@ export default function NavBar() {
           
                 <ListItem button key={index} >
                 <ListItemIcon>
-                    {route.name === "Productos" ? <CheckroomIcon color="primary"/> : route.name === "Stock" ? <Inventory2SharpIcon color="primary"/> :
+                    {route.name === "Clientes" ? <PeopleIcon color="primary"/> : route.name === "Productos" ? <CheckroomIcon color="primary"/> : route.name === "Stock" ? <Inventory2SharpIcon color="primary"/> :
                     route.name === "Agregar caracteristica" ? <AddBoxIcon color="primary"/>: route.name === "Realizar Venta" ? <AddShoppingCartIcon color="primary"/>
                     : <LogoutIcon color="primary"/>}
                 </ListItemIcon>
