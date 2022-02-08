@@ -19,19 +19,21 @@ const Clientes = ()=>{
     const [abrirModalEliminar, setAbrirModalEliminar] = useState();
     //Listado de clientes ficticios
     const headers = [
+        {text: "Id Cliente", key:"id"},
         {text: "Razon Social/Nombre", key:"razonSocial"},
         {text:"CUIL/DNI", key:"cuit" },
         {text:"Condicion Tributaria", key:"condicionTributaria"},
         {text:"Domicilio", key:"domicilio"},
-        {text:"Editar", key:"editar" , click:(cod)=> {history.push(rootPath + '/ClientesModificacion/'  + cod )}},
+        {text:"Editar", key:"editar" , click:(cod, id)=> {history.push(rootPath + '/ClientesModificacion/'  + id )}},
         {text:"Eliminar",key:"eliminar", click:(cod)=>{setAbrirModalEliminar(true); setCuilDniEliminar(cod)}},
     ]
     const cargarClientes = ()=>{
         axios.get(apiPath + "/Clientes/GetClientes")
         .then(response=>{
+            console.log(response.data)
             let clientesAux = []
             response.data.clientes.map(cliente=>(
-                clientesAux.push({razonSocial: cliente.razonSocial, cuit:cliente.cuit, domicilio:cliente.domicilio, condicionTributaria:cliente.condicionTributaria, editar: <EditIcon color="primary"/>, eliminar: <DeleteForeverIcon color="primary"/> })
+                clientesAux.push({id: cliente.id,razonSocial: cliente.razonSocial, cuit:cliente.cuit, domicilio:cliente.domicilio, condicionTributaria:cliente.condicionTributaria, editar: <EditIcon color="primary"/>, eliminar: <DeleteForeverIcon color="primary"/> })
             ))
             setClientes(clientesAux)
         })
@@ -43,9 +45,10 @@ const Clientes = ()=>{
     }
     //Revisar si anda cuando este Jp
     const eliminarCliente = (codigo)=>{
-        axios.delete(apiPath + "/Clientes/DeleteCliente?idCliente="+ codigo)
+        axios.delete(apiPath + "/Clientes/DeleteCliente?cuit="+ codigo)
         .then(response=>{
-            console.log(response.data)
+            setAbrirModalEliminar(false)
+            cargarClientes();
         })
         .catch(err=>{
             console.log(err)
@@ -59,9 +62,9 @@ const Clientes = ()=>{
             <div>
                 <NavBar/>
                 <h1 style={{margin: "0px"}}>Clientes</h1>
-                <Button variant="contained" onClick={()=>  history.push(rootPath+'/ClientesAlta') } style = {{margin:"0px"}} size="large">Nuevo producto</Button>
+                <Button variant="contained" onClick={()=>  history.push(rootPath+'/ClientesAlta') } style = {{margin:"0px"}} size="large">Nuevo cliente</Button>
                 <div style={{marginTop:"20px"}}>
-                    <Tabla rows={clientes} headers={headers} idColumn='cuit' ></Tabla>
+                    <Tabla rows={clientes} headers={headers} idColumn='cuit' idColumn2='id'></Tabla>
                 </div>
             </div>
             <Modal

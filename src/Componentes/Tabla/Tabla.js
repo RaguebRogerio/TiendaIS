@@ -42,7 +42,7 @@ export default function Tabla(props) {
           {props.rows.map((row) => (
             <StyledTableRow key={row.codigo}>
               {props.headers.map((header)=>(
-                  <StyledTableCell align="center" onClick={()=>header.click(row[props.idColumn])}>{row[header.key]}</StyledTableCell>
+                  <StyledTableCell align="center" onClick={()=>{props.idColumn2 ? header.click(row[props.idColumn], row[props.idColumn2]) : header.click(row[props.idColumn])}}>{row[header.key]}</StyledTableCell>
               ))}
             </StyledTableRow>
           ))}
