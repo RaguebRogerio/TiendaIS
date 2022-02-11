@@ -11,7 +11,11 @@ import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import Typography from "@mui/material/Typography";
 import EditIcon from '@mui/icons-material/Edit';
 import axios from "axios";
-import { apiPath } from "../../App";const RealizarVenta = ()=>{
+import { useHistory } from "react-router-dom";
+import { apiPath } from "../../App";
+import { rootPath } from "../../App";
+const RealizarVenta = ()=>{
+    let history = useHistory();
     //Producto
     const [codigoProducto, setCodigoProducto] = useState()
     const [descripcion, setDescripcion] = useState("")
@@ -23,8 +27,10 @@ import { apiPath } from "../../App";const RealizarVenta = ()=>{
     const [cantidad, setCantidad] = useState()
     //Modales
     const [abrirModalEliminar, setAbrirModalEliminar] = useState(false);
-    const [abrirModalPagar, setAbrirModalPagar] = useState()
-    const [abrirModalBuscarCliente, setAbrirModalBuscarCliente] = useState()
+    const [abrirModalPagar, setAbrirModalPagar] = useState(false)
+    const [abrirModalBuscarCliente, setAbrirModalBuscarCliente] = useState(false)
+    const [abrirModalPagoExitoso, setAbrirModalPagoExitoso] = useState (false);
+    const [abrirModalClienteAnonimo, setAbrirModalClienteAnonimo] = useState(false);
     //Modal de eliminar
     const [descripcionArticuloSeleccionado, setDescripcionArticuloSeleccionado] = useState()
     //Modal de buscar
@@ -36,8 +42,9 @@ import { apiPath } from "../../App";const RealizarVenta = ()=>{
         {id:2 ,descripcion: 'Tarjeta'}
     ]
     //CLiente
-    const [cliente, setCliente] = useState("CONSUMIDOR FINAL")
+    const [clienteCuit, setClienteCuit] = useState("CONSUMIDOR FINAL")
     const [condicionTributaria, setCondicionTributaria] = useState("CONSUMIDOR FINAL")
+    const [clienteNombre, setClienteNombre]= useState("");
     //SubTotal
     const [subtotal, setSubTotal] = useState(0)
     //Tabla
@@ -54,7 +61,7 @@ import { apiPath } from "../../App";const RealizarVenta = ()=>{
       //Funcion para agregar un producto a la tabla y actualizar el subtotal
       const agregarProducto= ()=>{
         const dateTableAux = dataTable
-        dateTableAux.push({codigo:codigoProducto ,descripcion: descripcion, precio: precioUnitario, cantidad: cantidad,eliminar: <DeleteForeverIcon color="primary"/>})
+        dateTableAux.push({codigo:codigoProducto ,descripcion: descripcion, precio: precioUnitario, cantidad: cantidad,eliminar: <DeleteForeverIcon color="primary"/>, talle: talle, color:color, cantidad: cantidad})
         setDataTable([...dateTableAux])
         setDescripcion("")
         setCodigoProducto("")
@@ -132,6 +139,63 @@ import { apiPath } from "../../App";const RealizarVenta = ()=>{
         })
         setSubTotal(subTotalAux)
       },[dataTable])
+      useEffect(()=>{
+          buscarCliente("Consumidor Final") //En realidad debe ser el 1
+      },[])
+      //Funcion para buscar cliente
+    const buscarCliente = (cuitNombre)=>{
+        axios.get(apiPath + "/Clientes/GetClienteVenta?buscar="+cuitNombre)
+        .then(response=>{
+            setClienteCuit(response.data.cliente.cuit)
+            setClienteNombre(response.data.cliente.razonSocial)
+            setCondicionTributaria(response.data.cliente.condicionTributaria)
+            if(abrirModalBuscarCliente){
+                setAbrirModalBuscarCliente(false)
+            }
+        })
+        .catch(err=>{
+            console.log(err)
+        })
+    }
+    //Funcion de pago 
+    const pagar = ()=>{
+        const auxiliar = []
+        dataTable.map(data=>(
+            auxiliar.push({
+                "cantidad":Number(data.cantidad),
+                "idTalle": Number(data.talle),
+                "idColor": Number(data.color),
+                "precio": Number(data.precio),
+                "codigoProducto": "" +data.codigo
+            })
+        ))
+            const body = {
+            "idEmpleado": Number(window.localStorage.getItem("id")),
+            "cuit": ""+clienteCuit,
+            "lineaDeVentas": auxiliar
+            }
+            axios.post(apiPath +"/Ventas/CreateVenta", body)
+            .then(response=>{
+                setAbrirModalPagoExitoso(true)
+                console.log(response.data)
+            }).catch(err=>{
+                console.log(err)
+            })
+      }
+      //Funcion que valida el pago
+    const validacionPagar = ()=>{        
+        if(subtotal > 10000){
+            if(clienteNombre === "Consumidor Final"){
+                console.log("Poner modal de que no se puede tener un cliente anonimo con una compra mayor a 10000")
+                setAbrirModalClienteAnonimo()
+            }else{
+                pagar()
+            }
+        }else{
+            pagar()
+        }
+      
+    }
 
     return(
         <Container>
@@ -188,12 +252,12 @@ import { apiPath } from "../../App";const RealizarVenta = ()=>{
                             <div style={{width:"50%"}}>
                                 <div style={{display:"flex"}}>
                                     <div style={{width:"100%", borderRadius:"15px", backgroundColor:"#CCD1D1"}}>
-                                        <Typography style={{marginLeft:"2px", color:"#515A5A"}} variant="h5" component="h2"><b>Cliente: {cliente}</b></Typography>
+                                        <Typography style={{marginLeft:"2px", color:"#515A5A"}} variant="h5" component="h2"><b>Cliente: {clienteNombre}</b></Typography>
                                     </div>
                                     <EditIcon fontSize="large" onClick={()=>{setAbrirModalBuscarCliente(true)}}/>
                                 </div>
                                 <div style={{width:"100%", borderRadius:"15px", backgroundColor:"#CCD1D1", marginTop:"10px"}}>
-                                        <Typography style={{marginLeft:"2px", color:"#515A5A"}} variant="h6" component="h2"><b>Condicion tributaria: {condicionTributaria}</b></Typography>
+                                        <Typography style={{marginLeft:"2px", color:"#515A5A"}} variant="h6" component="h2"><b>Condicion tributaria: {condicionTributaria === 0 ? "Responsable Inscripto" : condicionTributaria === 1 ? "Monotributo" : condicionTributaria === 2 ? "Exento" : condicionTributaria === 3 ? "No Responsable" : "Consumidor Final"}</b></Typography>
                                 </div>
                             </div>
                             <div style={{width:"50%", marginLeft:'12px'}}>
@@ -236,7 +300,7 @@ import { apiPath } from "../../App";const RealizarVenta = ()=>{
                     <hr style={{width: "100%", height:"3px", marginTop:"100px"}}></hr>
                     <div style={{display:"flex", justifyContent:"space-between", marginTop:"20px"}}>
                         <Button color="grey" variant="contained" onClick={()=>setAbrirModalBuscarCliente(false)}>Cancelar</Button>
-                        <Button color="primary" variant="contained" onClick={()=>console.log("Buscando Cliente")}>Buscar</Button>
+                        <Button color="primary" variant="contained" onClick={()=>buscarCliente(inputBuscar)}>Buscar</Button>
                     </div>
 
             </Modal>
@@ -261,10 +325,24 @@ import { apiPath } from "../../App";const RealizarVenta = ()=>{
                     <hr style={{width: "100%", height:"3px", marginTop:"50px"}}></hr>
                     <div style={{display:"flex", justifyContent:"space-between", marginTop:"20px"}}>
                         <Button color="grey" variant="contained" onClick={()=>setAbrirModalPagar(false)}>Cancelar</Button>
-                        <Button color="primary" variant="contained" onClick={()=>console.log("pagando")}>Cobrar</Button>
+                        <Button color="primary" variant="contained" onClick={()=>validacionPagar()}>Cobrar</Button>
                     </div>
 
 
+            </Modal>
+            <Modal
+             open={abrirModalPagoExitoso}
+             setOpen={setAbrirModalPagoExitoso}
+             >
+                <h1>Pago de producto Exitoso !</h1>
+                <Button variant="contained" onClick={()=>{history.push(rootPath +'/inicio')}}>Confirmar</Button>
+            </Modal>
+            <Modal
+             open={abrirModalPagoExitoso}
+             setOpen={setAbrirModalPagoExitoso}
+             >
+                <h1>Pago de producto Exitoso !</h1>
+                <Button variant="contained" onClick={()=>{history.push(rootPath +'/inicio')}}>Confirmar</Button>
             </Modal>
         </Container>
     )
