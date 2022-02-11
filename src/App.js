@@ -12,6 +12,7 @@ import ModificarProducto from './Paginas/Productos/ModificacionProducto'
 import Clientes from './Paginas/Clientes/Clientes';
 import ClientesAlta from './Paginas/Clientes/ClientesAlta';
 import ClientesModificacion from './Paginas/Clientes/ClientesModificacion';
+import Factura from './Paginas/Factura/Factura';
 export const rootPath = "/tiendaOnline";
 export const apiPath = "http://localhost:3000/api"
 function App() {
@@ -19,6 +20,7 @@ function App() {
   return (
     <div>
       <Switch>
+            <Route path = {rootPath + "Factura"} component={Factura}/>
             <Route path = {rootPath + "/ClientesModificacion/:idCliente"} component={ClientesModificacion} children={<ClientesModificacion/>}/>
             <Route path = {rootPath + "/ClientesAlta"} component={ClientesAlta}/>
             <Route path = {rootPath + "/Clientes"} component={Clientes}/>

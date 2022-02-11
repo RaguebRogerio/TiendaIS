@@ -14,6 +14,7 @@ import axios from "axios";
 import { useHistory } from "react-router-dom";
 import { apiPath } from "../../App";
 import { rootPath } from "../../App";
+import { useDispatch } from "react-redux";
 const RealizarVenta = ()=>{
     let history = useHistory();
     //Producto
@@ -30,7 +31,6 @@ const RealizarVenta = ()=>{
     const [abrirModalPagar, setAbrirModalPagar] = useState(false)
     const [abrirModalBuscarCliente, setAbrirModalBuscarCliente] = useState(false)
     const [abrirModalPagoExitoso, setAbrirModalPagoExitoso] = useState (false);
-    const [abrirModalClienteAnonimo, setAbrirModalClienteAnonimo] = useState(false);
     //Modal de eliminar
     const [descripcionArticuloSeleccionado, setDescripcionArticuloSeleccionado] = useState()
     //Modal de buscar
@@ -58,6 +58,8 @@ const RealizarVenta = ()=>{
         {text:"Cantidad", key:"cantidad"},
         {text:"Eliminar",key:"eliminar", click:(codigo)=>{console.log(codigo); setDescripcionArticuloSeleccionado(codigo); setAbrirModalEliminar(true); }},
     ]
+    //Redux para pasarle todo al componente Factura digital
+    const dispatch = useDispatch();
       //Funcion para agregar un producto a la tabla y actualizar el subtotal
       const agregarProducto= ()=>{
         const dateTableAux = dataTable
@@ -177,8 +179,10 @@ const RealizarVenta = ()=>{
             axios.post(apiPath +"/Ventas/CreateVenta", body)
             .then(response=>{
                 setAbrirModalPagoExitoso(true)
-                console.log(response.data)
+                generarComprobante(response.data)
             }).catch(err=>{
+                setAbrirModalPagoExitoso(true) //TODO ESto no va
+                generarComprobante(err) //TODO ESTO TAMPOCO
                 console.log(err)
             })
       }
@@ -187,7 +191,6 @@ const RealizarVenta = ()=>{
         if(subtotal > 10000){
             if(clienteNombre === "Consumidor Final"){
                 console.log("Poner modal de que no se puede tener un cliente anonimo con una compra mayor a 10000")
-                setAbrirModalClienteAnonimo()
             }else{
                 pagar()
             }
@@ -196,7 +199,12 @@ const RealizarVenta = ()=>{
         }
       
     }
-
+    //Funcion para generar el comprobante
+    const generarComprobante = (data)=>{
+        console.log("generar")
+        dispatch({ type:'set', payload: ""+data})
+        history.push(rootPath + "Factura")
+    }
     return(
         <Container>
             <NavBar></NavBar>
@@ -342,7 +350,7 @@ const RealizarVenta = ()=>{
              setOpen={setAbrirModalPagoExitoso}
              >
                 <h1>Pago de producto Exitoso !</h1>
-                <Button variant="contained" onClick={()=>{history.push(rootPath +'/inicio')}}>Confirmar</Button>
+                <Button variant="contained" onClick={()=>setAbrirModalPagoExitoso(false)}>Confirmar</Button>
             </Modal>
         </Container>
     )
