@@ -1,5 +1,4 @@
 const ComprobanteReducer = (state="", action)=>{
-    console.log({state,action});
     switch(action.type){
         case 'set':{
             return action.payload

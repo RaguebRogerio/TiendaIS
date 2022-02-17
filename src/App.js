@@ -20,7 +20,7 @@ function App() {
   return (
     <div>
       <Switch>
-            <Route path = {rootPath + "Factura"} component={Factura}/>
+            <Route path = {rootPath + "/Factura"} component={Factura}/>
             <Route path = {rootPath + "/ClientesModificacion/:idCliente"} component={ClientesModificacion} children={<ClientesModificacion/>}/>
             <Route path = {rootPath + "/ClientesAlta"} component={ClientesAlta}/>
             <Route path = {rootPath + "/Clientes"} component={Clientes}/>

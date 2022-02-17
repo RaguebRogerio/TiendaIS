@@ -82,7 +82,7 @@ const ClientesAlta = ()=>{
                 <div style={{textAlign:'center'}}>
                         <DropDown
                             width="90%"
-                            label="Tipo de talle"
+                            label="Condicion tributaria"
                             labelId="tipoTalle"
                             id="tipoTalleId"
                             items={condicionesTributarias}

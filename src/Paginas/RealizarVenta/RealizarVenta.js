@@ -31,6 +31,7 @@ const RealizarVenta = ()=>{
     const [abrirModalPagar, setAbrirModalPagar] = useState(false)
     const [abrirModalBuscarCliente, setAbrirModalBuscarCliente] = useState(false)
     const [abrirModalPagoExitoso, setAbrirModalPagoExitoso] = useState (false);
+    const [abrirModalValidacionPago,setAbrirModalValdiacionPago] = useState (false);
     //Modal de eliminar
     const [descripcionArticuloSeleccionado, setDescripcionArticuloSeleccionado] = useState()
     //Modal de buscar
@@ -181,8 +182,7 @@ const RealizarVenta = ()=>{
                 setAbrirModalPagoExitoso(true)
                 generarComprobante(response.data)
             }).catch(err=>{
-                setAbrirModalPagoExitoso(true) //TODO ESto no va
-                generarComprobante(err) //TODO ESTO TAMPOCO
+
                 console.log(err)
             })
       }
@@ -190,7 +190,8 @@ const RealizarVenta = ()=>{
     const validacionPagar = ()=>{        
         if(subtotal > 10000){
             if(clienteNombre === "Consumidor Final"){
-                console.log("Poner modal de que no se puede tener un cliente anonimo con una compra mayor a 10000")
+                setAbrirModalValdiacionPago(true)
+                setAbrirModalPagar(false)
             }else{
                 pagar()
             }
@@ -201,9 +202,9 @@ const RealizarVenta = ()=>{
     }
     //Funcion para generar el comprobante
     const generarComprobante = (data)=>{
-        console.log("generar")
-        dispatch({ type:'set', payload: ""+data})
-        history.push(rootPath + "Factura")
+        console.log(data)
+        dispatch({ type:'set', payload: data})
+        
     }
     return(
         <Container>
@@ -343,14 +344,14 @@ const RealizarVenta = ()=>{
              setOpen={setAbrirModalPagoExitoso}
              >
                 <h1>Pago de producto Exitoso !</h1>
-                <Button variant="contained" onClick={()=>{history.push(rootPath +'/inicio')}}>Confirmar</Button>
+                <Button variant="contained" onClick={()=>history.push(rootPath + "/Factura")}>Confirmar</Button>
             </Modal>
             <Modal
-             open={abrirModalPagoExitoso}
-             setOpen={setAbrirModalPagoExitoso}
+             open={abrirModalValidacionPago}
+             setOpen={setAbrirModalValdiacionPago}
              >
-                <h1>Pago de producto Exitoso !</h1>
-                <Button variant="contained" onClick={()=>setAbrirModalPagoExitoso(false)}>Confirmar</Button>
+                <h1>El cliente no puede ser anonimo si el pago es mayor a $10000</h1>
+                <Button variant="contained" onClick={()=>setAbrirModalValdiacionPago(false)}>Entendido !</Button>
             </Modal>
         </Container>
     )

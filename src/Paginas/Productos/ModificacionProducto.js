@@ -22,9 +22,9 @@ const ModificarProducto  = ()=>{
     const [id, setId] =useState()
     const [costoIva, setCostoIva] = useState()
     //Select
-    const [tipoTalle, setTipoTalle] = useState()
-    const [marca, setMarca] = useState()
-    const [rubro, setRubro] = useState()
+    const [tipoTalle, setTipoTalle] = useState("")
+    const [marca, setMarca] = useState("")
+    const [rubro, setRubro] = useState("")
     const [iva, setIva] = useState("21%")
     let { codigo } = useParams();
  /*    useEffect(()=>{
@@ -64,6 +64,8 @@ const ModificarProducto  = ()=>{
             setDescripcion(response.data.producto.descripcion)
             setMargenGanancia(response.data.producto.margenGanancia)
             setMarca(response.data.producto.marca.id)
+            setRubro(response.data.producto.rubro.id)
+            setTipoTalle(response.data.producto.tipoTalle)
         })
         .catch(err=>{
             if(err){
