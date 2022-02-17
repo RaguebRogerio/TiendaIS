@@ -179,8 +179,13 @@ const RealizarVenta = ()=>{
             }
             axios.post(apiPath +"/Ventas/CreateVenta", body)
             .then(response=>{
-                setAbrirModalPagoExitoso(true)
-                generarComprobante(response.data)
+                if(response.data.feCabResp.resultado === "A"){
+                    setAbrirModalPagoExitoso(true)
+                    generarComprobante(response.data)
+                }else{
+                    console.log("Algo salio mal")
+                }
+               
             }).catch(err=>{
 
                 console.log(err)

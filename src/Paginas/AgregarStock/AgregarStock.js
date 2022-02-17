@@ -12,9 +12,9 @@ const AgregarStock = ()=>{
     //Producto
     const [codigoProducto, setCodigoProducto] = useState()
     const [descripcion, setDescripcion] = useState("")
-    const [talle, setTalle] = useState()
-    const [color, setColor] = useState()
-    const [sucursal, setSucursal] = useState()
+    const [talle, setTalle] = useState("")
+    const [color, setColor] = useState("")
+    const [sucursal, setSucursal] = useState("")
     const [cantidad, setCantidad] = useState()
     
     //DropDowns
@@ -85,8 +85,13 @@ const AgregarStock = ()=>{
         }
        axios.post(apiPath + "/Stock/AgregarStock", body)
        .then(response=>{
-            console.log(response.data)
             setAbrirModalExito(true)
+            setCodigoProducto("")
+            setDescripcion("")
+            setTalle("")
+            setColor("")
+            setSucursal("")
+            setCantidad(0)
        })
        .catch(err=>{
            if(err){
